@@ -3,23 +3,23 @@ import { createActiveSession, destroySession } from "./session";
 import { state } from "./state";
 
 /**
- * Starts the PGLT extension
+ * Starts the PostgresTools extension
  */
 export const start = async () => {
   state.state = "starting";
   await doStart();
   state.state = "started";
-  logger.info("PGLT extension started");
+  logger.info("PostgresTools extension started");
 };
 
 /**
- * Stops the PGLT extension
+ * Stops the PostgresTools extension
  */
 export const stop = async () => {
   state.state = "stopping";
   await doStop();
   state.state = "stopped";
-  logger.info("PGLT extension stopped");
+  logger.info("PostgresTools extension stopped");
 };
 
 export const restart = async () => {
@@ -32,7 +32,7 @@ export const restart = async () => {
   await doStop();
   await doStart();
   state.state = "started";
-  logger.info("PGLT extension restarted");
+  logger.info("PostgresTools extension restarted");
 };
 
 const doStart = async () => {
@@ -42,7 +42,7 @@ const doStart = async () => {
     if (e instanceof Error) {
       logger.error(e.message);
     }
-    logger.error("Failed to start PGLT extension", { error: e });
+    logger.error("Failed to start PostgresTools extension", { error: e });
     state.state = "error";
   }
 };

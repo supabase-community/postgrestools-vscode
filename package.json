@@ -1,5 +1,5 @@
 {
-  "name": "pglt-vscode",
+  "name": "postgrestools-vscode",
   "publisher": "supabase",
   "description": "Postgres Language Server right in your IDE.",
   "version": "0.0.1",
@@ -16,68 +16,68 @@
   "contributes": {
     "commands": [
       {
-        "title": "PGLT: Start",
-        "command": "pglt.start"
+        "title": "PostgresTools: Start",
+        "command": "postgrestools.start"
       },
       {
-        "title": "PGLT: Stop",
-        "command": "pglt.stop"
+        "title": "PostgresTools: Stop",
+        "command": "postgrestools.stop"
       },
       {
-        "title": "PGLT: Restart",
-        "command": "pglt.restart"
+        "title": "PostgresTools: Restart",
+        "command": "postgrestools.restart"
       },
       {
-        "title": "PGLT: Download CLI",
-        "command": "pglt.download"
+        "title": "PostgresTools: Download CLI",
+        "command": "postgrestools.download"
       },
       {
-        "title": "PGLT: Hard Reset (Delete all temp & global binaries)",
-        "command": "pglt.reset"
+        "title": "PostgresTools: Hard Reset (Delete All Temp & Global Binaries)",
+        "command": "postgrestools.reset"
       },
       {
-        "title": "PGLT: Get Current Version",
-        "command": "pglt.currentVersion"
+        "title": "PostgresTools: Get Current Version",
+        "command": "postgrestools.currentVersion"
       }
     ],
     "configuration": {
-      "title": "PGLT",
+      "title": "PostgresTools",
       "properties": {
-        "pglt.enabled": {
+        "postgrestools.enabled": {
           "type": "boolean",
-          "description": "Whether to enable the PGLT extension.",
+          "description": "Whether to enable the PostgresTools extension.",
           "default": true,
           "scope": "resource"
         },
-        "pglt.allowDownloadPrereleases": {
+        "postgrestools.allowDownloadPrereleases": {
           "type": "boolean",
           "description": "Allows selecting prereleases when downloading the binary via this extension",
           "default": false,
           "scope": "resource"
         },
-        "pglt.configFile": {
+        "postgrestools.configFile": {
           "type": "string",
-          "description": "Path to the `pglt.toml` file. You don't need to set this if the file is on root level of your project.",
+          "description": "Path to the `postgrestools.toml` file. You don't need to set this if the file is on root level of your project.",
           "scope": "resource"
         },
-        "pglt.bin": {
+        "postgrestools.bin": {
           "oneOf": [
             {
               "type": "string",
-              "description": "Path to the PGLT Language Server binary",
+              "description": "Path to the PostgresTools Language Server binary",
               "examples": [
-                "/path/to/pglt",
-                "./path/to/pglt"
+                "/path/to/postgrestools",
+                "./path/to/postgrestools"
               ]
             },
             {
               "type": "object",
-              "description": "Platform-specific paths to the PGLT Language Server binary",
+              "description": "Platform-specific paths to the PostgresTools Language Server binary",
               "examples": [
                 {
-                  "linux-x64": "/path/to/pglt",
-                  "darwin-arm64": "./path/to/pglt",
-                  "win32-x64": "/path/to/pglt.exe"
+                  "linux-x64": "/path/to/postgrestools",
+                  "darwin-arm64": "./path/to/postgrestools",
+                  "win32-x64": "/path/to/postgrestools.exe"
                 }
               ]
             }

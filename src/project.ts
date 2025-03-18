@@ -19,7 +19,7 @@ export async function getActiveProject(): Promise<Project | null> {
 
   if (folders.length > 1) {
     window.showErrorMessage(
-      "PGLT does not support Multi-Root workspace mode for now."
+      "PostgresTools does not support Multi-Root workspace mode for now."
     );
     return null;
   }
@@ -40,7 +40,7 @@ async function getActiveProjectForSingleFolder(
     configPath = Uri.joinPath(first.uri, userConfig);
   } else {
     logger.info("User did not specify path to config file. Using default.");
-    configPath = Uri.joinPath(first.uri, "pglt.toml");
+    configPath = Uri.joinPath(first.uri, "postgrestools.toml");
   }
 
   if (!(await fileExists(configPath))) {

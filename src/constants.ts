@@ -7,7 +7,7 @@ export enum OperatingMode {
   MultiRoot = "multi_root",
 }
 
-const npmPackageName = "pglt_testrelease-nightly-3";
+const npmPackageName = "postgrestools_testrelease-nightly-3";
 const binaryNpmPackageName = npmPackageName.replace("_", "-");
 
 /**
@@ -46,11 +46,11 @@ const _CONSTANTS = {
   activationTimestamp: Date.now(),
 
   platformSpecificBinaryName: (() => {
-    return `pglt${process.platform === "win32" ? ".exe" : ""}`;
+    return `postgrestools${process.platform === "win32" ? ".exe" : ""}`;
   })(),
 
   /**
-   * The name under which pglt is published on npm.
+   * The name under which PostgresTools is published on npm.
    */
   npmPackageName,
 
@@ -65,7 +65,7 @@ const _CONSTANTS = {
   })(),
 
   platformSpecificReleasedAssetName: (() => {
-    let assetName = "pglt";
+    let assetName = "postgrestools";
 
     for (const [nodeArch, rustArch] of Object.entries(archMappings)) {
       if (nodeArch === process.arch) {

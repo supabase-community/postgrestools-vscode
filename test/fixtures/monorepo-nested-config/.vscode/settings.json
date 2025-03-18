@@ -1,4 +1,4 @@
 {
-  "pglt.configFile": "/packages/service-a/pglt.toml",
-  "pglt.allowDownloadPrereleases": true
+  "postgrestools.configFile": "/packages/service-a/postgrestools.toml",
+  "postgrestools.allowDownloadPrereleases": true
 }

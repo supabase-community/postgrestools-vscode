@@ -6,7 +6,7 @@ import {
 
 /**
  * This function retrieves a setting from the workspace configuration.
- * Settings are looked up under the "pglt" prefix.
+ * Settings are looked up under the "postgrestools" prefix.
  *
  * @param key The key of the setting to retrieve
  */
@@ -16,7 +16,7 @@ export const getConfig = <T>(
     scope?: ConfigurationScope;
   } = {}
 ): T | undefined => {
-  return workspace.getConfiguration("pglt", options.scope).get<T>(key);
+  return workspace.getConfiguration("postgrestools", options.scope).get<T>(key);
 };
 
 /**

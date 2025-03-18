@@ -4,7 +4,7 @@ import { CONSTANTS } from "./constants";
 type LogArguments = Record<string, unknown>;
 
 /**
- * Messages logged to this logger will be displayed in the `PGLT` output
+ * Messages logged to this logger will be displayed in the `PostgresTools` output
  * channel in the Output panel. This logger respects the user's settings for
  * logging verbosity, so only messages with the appropriate log level will be
  * displayed.

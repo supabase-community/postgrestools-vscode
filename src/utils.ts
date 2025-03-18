@@ -104,7 +104,7 @@ export function subtractURI(original: Uri, subtract: Uri): Uri | undefined {
  * This function checks if a file is executable using Node's `accessSync` function.
  * It returns true if the file is executable, otherwise it returns false.
  *
- * This is used to ensure that downloaded PGLT binaries are executable.
+ * This is used to ensure that downloaded PostgresTools binaries are executable.
  */
 export function fileIsExecutable(uri: Uri): boolean {
   try {

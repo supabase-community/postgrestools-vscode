@@ -44,7 +44,7 @@ export async function getAllReleases(opts: {
 
     if (results.length === 0) {
       window.showErrorMessage(
-        'No releases found on GitHub. Suggestion: Set "pglt.allowDownloadPrereleases" to `true` in your vscode settings.'
+        'No releases found on GitHub. Suggestion: Set "postgrestools.allowDownloadPrereleases" to `true` in your vscode settings.'
       );
       return [];
     }

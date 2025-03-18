@@ -14,7 +14,7 @@ import { chmodSync } from "fs";
 import { getAllReleases } from "./releases";
 
 export async function downloadPglt(): Promise<Uri | null> {
-  logger.debug(`Downloading PGLT`);
+  logger.debug(`Downloading PostgresTools`);
 
   const versionToDownload = await promptVersionToDownload();
 
@@ -25,7 +25,7 @@ export async function downloadPglt(): Promise<Uri | null> {
 
   await window.withProgress(
     {
-      title: `Downloading PGLT ${versionToDownload.label}`,
+      title: `Downloading PostgresTools ${versionToDownload.label}`,
       location: ProgressLocation.Notification,
     },
     () => downloadPgltVersion(versionToDownload.label)
@@ -64,7 +64,7 @@ async function downloadPgltVersion(version: string): Promise<void> {
   try {
     await workspace.fs.writeFile(binPath, new Uint8Array(binary));
     chmodSync(binPath.fsPath, 0o755);
-    const successMsg = `Downloaded PGLT ${version} to ${binPath.fsPath}`;
+    const successMsg = `Downloaded PostgresTools ${version} to ${binPath.fsPath}`;
     logger.info(successMsg);
     window.showInformationMessage(successMsg);
     state.context.globalState.update("downloadedVersion", version);
@@ -113,7 +113,7 @@ export async function getDownloadedVersion(): Promise<{
 }
 
 async function promptVersionToDownload() {
-  logger.debug(`Prompting user to select PGLT version to download`);
+  logger.debug(`Prompting user to select PostgresTools version to download`);
 
   const itemsPromise: Promise<QuickPickItem[]> = new Promise(
     async (resolve) => {
@@ -161,8 +161,8 @@ async function promptVersionToDownload() {
   );
 
   return window.showQuickPick(itemsPromise, {
-    title: "Select PGLT version to download",
-    placeHolder: "Select PGLT version to download",
+    title: "Select PostgresTools version to download",
+    placeHolder: "Select PostgresTools version to download",
   });
 }
 

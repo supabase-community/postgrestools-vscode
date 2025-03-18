@@ -19,7 +19,7 @@ const LOCAL_STRATEGIES: Strategy[] = [
   {
     strategy: vsCodeSettingsStrategy,
     onSuccess: (uri) =>
-      logger.debug(`Found Binary in VSCode Settings (pglt.lsp.bin)`, {
+      logger.debug(`Found Binary in VSCode Settings (postgrestools.bin)`, {
         path: uri.fsPath,
       }),
   },
