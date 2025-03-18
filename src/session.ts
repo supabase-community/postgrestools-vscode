@@ -37,9 +37,9 @@ export const createSession = async (
 
   if (!findResult) {
     window.showErrorMessage(
-      `Unable to find a PGLT binary. Read the docs for more various strategies to install a binary.`
+      `Unable to find a PostgresTools binary. Read the docs for more various strategies to install a binary.`
     );
-    logger.error("Could not find the PGLT binary");
+    logger.error("Could not find the PostgresTools binary");
     return;
   }
 
@@ -89,7 +89,7 @@ const copyBinaryToTemporaryLocation = async (
   bin: Uri
 ): Promise<Uri | undefined> => {
   // Retrieve the version of the binary
-  // We call pglt with --version which outputs the version in the format
+  // We call postgrestools with --version which outputs the version in the format
   // of "Version: 1.0.0"
   const version = spawnSync(bin.fsPath, ["--version"])
     .stdout.toString()
@@ -99,7 +99,10 @@ const copyBinaryToTemporaryLocation = async (
   const location = Uri.joinPath(
     state.context.globalStorageUri,
     "tmp-bin",
-    CONSTANTS.platformSpecificBinaryName.replace("pglt", `pglt-${version}`)
+    CONSTANTS.platformSpecificBinaryName.replace(
+      "postgrestools",
+      `postgrestools-${version}`
+    )
   );
 
   try {
@@ -113,13 +116,16 @@ const copyBinaryToTemporaryLocation = async (
         destination: location.fsPath,
       });
       copyFileSync(bin.fsPath, location.fsPath);
-      logger.debug("Copied pglt binary binary to temporary location.", {
-        original: bin.fsPath,
-        temporary: location.fsPath,
-      });
+      logger.debug(
+        "Copied postgrestools binary binary to temporary location.",
+        {
+          original: bin.fsPath,
+          temporary: location.fsPath,
+        }
+      );
     } else {
       logger.debug(
-        `A pglt binary for the same version ${version} already exists in the temporary location.`,
+        `A postgrestools binary for the same version ${version} already exists in the temporary location.`,
         {
           original: bin.fsPath,
           temporary: location.fsPath,
@@ -173,7 +179,7 @@ export const createActiveSession = async () => {
 };
 
 /**
- * Creates a new PGLT LSP client
+ * Creates a new PostgresTools LSP client
  */
 const createLanguageClient = (bin: Uri, project: Project) => {
   const args = ["lsp-proxy", "--config-path", project.configPath.toString()];
@@ -194,7 +200,7 @@ const createLanguageClient = (bin: Uri, project: Project) => {
     progressOnInitialization: true,
 
     initializationFailedHandler: (e): boolean => {
-      logger.error("Failed to initialize the PGLT language server", {
+      logger.error("Failed to initialize the PostgresTools language server", {
         error: e.toString(),
       });
 
@@ -206,7 +212,7 @@ const createLanguageClient = (bin: Uri, project: Project) => {
         message,
         count
       ): ErrorHandlerResult | Promise<ErrorHandlerResult> => {
-        logger.error("PGLT language server error", {
+        logger.error("PostgresTools language server error", {
           error: error.toString(),
           stack: error.stack,
           errorMessage: error.message,
@@ -216,14 +222,14 @@ const createLanguageClient = (bin: Uri, project: Project) => {
 
         return {
           action: ErrorAction.Shutdown,
-          message: "PGLT language server error",
+          message: "PostgresTools language server error",
         };
       },
       closed: (): CloseHandlerResult | Promise<CloseHandlerResult> => {
-        logger.error("PGLT language server closed");
+        logger.error("PostgresTools language server closed");
         return {
           action: CloseAction.DoNotRestart,
-          message: "PGLT language server closed",
+          message: "PostgresTools language server closed",
         };
       },
     },
@@ -234,16 +240,16 @@ const createLanguageClient = (bin: Uri, project: Project) => {
     workspaceFolder: undefined,
   };
 
-  return new PGLTLanguageClient(
-    "pglt.lsp",
-    "pglt",
+  return new PostgresToolsLanguageClient(
+    "postgrestools.lsp",
+    "postgrestools",
     serverOptions,
     clientOptions
   );
 };
 
 /**
- * Creates a new PGLT LSP logger
+ * Creates a new PostgresTools LSP logger
  */
 const createLspLogger = (project?: Project): LogOutputChannel => {
   // If the project is missing, we're creating a logger for the global LSP
@@ -277,7 +283,7 @@ const createLspLogger = (project?: Project): LogOutputChannel => {
 };
 
 /**
- * Creates a new PGLT LSP logger
+ * Creates a new PostgresTools LSP logger
  */
 const createLspTraceLogger = (project?: Project): LogOutputChannel => {
   // If the project is missing, we're creating a logger for the global LSP
@@ -338,7 +344,7 @@ const createDocumentSelector = (project?: Project): DocumentFilter[] => {
   }));
 };
 
-class PGLTLanguageClient extends LanguageClient {
+class PostgresToolsLanguageClient extends LanguageClient {
   protected fillInitializeParams(params: InitializeParams): void {
     super.fillInitializeParams(params);
 

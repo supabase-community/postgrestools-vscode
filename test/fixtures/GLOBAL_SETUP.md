@@ -8,4 +8,4 @@
 ## Getting a Fresh State
 
 In the extension host, follow the test's TestSetup in the relevant README.
-Before the test assertions, use the "PGLT: Hard Reset" VSCode command. This will clear all previously installed binaries.
+Before the test assertions, use the "PostgresTools: Hard Reset" VSCode command. This will clear all previously installed binaries.

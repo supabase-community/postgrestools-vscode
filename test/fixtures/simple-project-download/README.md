@@ -1,10 +1,10 @@
 # Simple Project
 
-A bread-and-butter project with a `pglt.toml` on top level and SQL files in the `src` folder.
+A bread-and-butter project with a `postgrestools.toml` on top level and SQL files in the `src` folder.
 
 ## Expectations
 
-The extension should recognize the `pglt.toml` file and connect with the right database.
+The extension should recognize the `postgrestools.toml` file and connect with the right database.
 
 ## Test protocol
 

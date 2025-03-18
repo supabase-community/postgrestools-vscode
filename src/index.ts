@@ -10,7 +10,7 @@ import { createExtension, destroyExtension } from "./extension";
 export async function activate(context: vscode.ExtensionContext) {
   logger.clear();
   logger.info(
-    `PGLT extension ${context.extension.packageJSON.version} activated`
+    `PostgresTools extension ${context.extension.packageJSON.version} activated`
   );
   state.context = context;
 

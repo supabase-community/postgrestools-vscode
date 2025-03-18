@@ -23,7 +23,7 @@ export class UserFacingCommands {
 
   /**
    * When calling this command, the user will be prompted to select a version of
-   * the PGLT CLI to install. The selected version will be downloaded and stored
+   * the PostgresTools CLI to install. The selected version will be downloaded and stored
    * in VS Code's global storage directory.
    */
   static async download() {
@@ -31,7 +31,7 @@ export class UserFacingCommands {
   }
 
   /**
-   * Stops and restarts the PGLT extension, resetting state and cleaning up temporary binaries.
+   * Stops and restarts the PostgresTools extension, resetting state and cleaning up temporary binaries.
    */
   static async reset() {
     await stop();
@@ -40,17 +40,17 @@ export class UserFacingCommands {
     await state.context.globalState.update("downloadedVersion", undefined);
     state.activeSession = undefined;
     state.activeProject = undefined;
-    logger.info("PGLT extension was reset");
+    logger.info("PostgresTools extension was reset");
     await start();
   }
 
   static async currentVersion() {
     const result = await getDownloadedVersion();
     if (!result) {
-      window.showInformationMessage("No PGLT version installed.");
+      window.showInformationMessage("No PostgresTools version installed.");
     } else {
       window.showInformationMessage(
-        `Currently installed PGLT version is ${result.version}.`
+        `Currently installed PostgresTools version is ${result.version}.`
       );
     }
   }

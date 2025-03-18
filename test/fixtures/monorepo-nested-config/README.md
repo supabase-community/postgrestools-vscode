@@ -4,7 +4,7 @@ A mono repo that contains top-level dotfiles and several services in the `packag
 
 ## Expectations
 
-The extension should recognize the `.vscode/settings.json` file and follow it to the `pglt.toml` file in the `packages/service-a` directory.
+The extension should recognize the `.vscode/settings.json` file and follow it to the `postgrestools.toml` file in the `packages/service-a` directory.
 
 ## Test protocol
 

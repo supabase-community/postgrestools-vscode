@@ -12,7 +12,7 @@ import { debounce } from "./utils";
 import { updateHidden } from "./status-bar";
 
 /**
- * This function is responsible for booting the PGLT extension. It is called
+ * This function is responsible for booting the PostgresTools extension. It is called
  * when the extension is activated.
  */
 export const createExtension = async () => {
@@ -23,7 +23,7 @@ export const createExtension = async () => {
 };
 
 /**
- * This function is responsible for shutting down the PGLT extension. It is
+ * This function is responsible for shutting down the PostgresTools extension. It is
  * called when the extension is deactivated and will trigger a cleanup of the
  * extension's state and resources.
  */
@@ -33,13 +33,19 @@ export const destroyExtension = async () => {
 
 const registerUserFacingCommands = () => {
   state.context.subscriptions.push(
-    commands.registerCommand("pglt.start", UserFacingCommands.start),
-    commands.registerCommand("pglt.stop", UserFacingCommands.stop),
-    commands.registerCommand("pglt.restart", UserFacingCommands.restart),
-    commands.registerCommand("pglt.download", UserFacingCommands.download),
-    commands.registerCommand("pglt.reset", UserFacingCommands.reset),
+    commands.registerCommand("postgrestools.start", UserFacingCommands.start),
+    commands.registerCommand("postgrestools.stop", UserFacingCommands.stop),
     commands.registerCommand(
-      "pglt.currentVersion",
+      "postgrestools.restart",
+      UserFacingCommands.restart
+    ),
+    commands.registerCommand(
+      "postgrestools.download",
+      UserFacingCommands.download
+    ),
+    commands.registerCommand("postgrestools.reset", UserFacingCommands.reset),
+    commands.registerCommand(
+      "postgrestools.currentVersion",
       UserFacingCommands.currentVersion
     )
   );
@@ -48,14 +54,14 @@ const registerUserFacingCommands = () => {
 };
 
 /**
- * This function sets up a listener for configuration changes in the `pglt`
+ * This function sets up a listener for configuration changes in the `postgrestools`
  * namespace. When a configuration change is detected, the extension is
  * restarted to reflect the new configuration.
  */
 const listenForConfigurationChanges = () => {
   const debouncedConfigurationChangeHandler = debounce(
     (event: ConfigurationChangeEvent) => {
-      if (event.affectsConfiguration("pglt")) {
+      if (event.affectsConfiguration("postgrestools")) {
         logger.info("Configuration change detected.");
         if (!["restarting", "stopping"].includes(state.state)) {
           restart();
