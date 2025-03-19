@@ -1,4 +1,4 @@
 {
-  "postgrestools.configFile": "/packages/service-a/postgrestools.toml",
+  "postgrestools.configFile": "/packages/service-a/postgrestools.jsonc",
   "postgrestools.allowDownloadPrereleases": true
 }
