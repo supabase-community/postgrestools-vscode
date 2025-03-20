@@ -182,7 +182,7 @@ export const createActiveSession = async () => {
  * Creates a new PostgresTools LSP client
  */
 const createLanguageClient = (bin: Uri, project: Project) => {
-  const args = ["lsp-proxy", "--config-path", project.configPath.toString()];
+  const args = ["lsp-proxy", `--config-path=${project.configPath.fsPath}`];
 
   const serverOptions: ServerOptions = {
     command: bin.fsPath,
@@ -192,6 +192,10 @@ const createLanguageClient = (bin: Uri, project: Project) => {
     },
     args,
   };
+
+  logger.info(`Server Options: `, {
+    serverOptions,
+  });
 
   const clientOptions: LanguageClientOptions = {
     outputChannel: createLspLogger(project),

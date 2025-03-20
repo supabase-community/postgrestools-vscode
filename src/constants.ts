@@ -7,8 +7,7 @@ export enum OperatingMode {
   MultiRoot = "multi_root",
 }
 
-const npmPackageName = "postgrestools_testrelease-nightly-3";
-const binaryNpmPackageName = npmPackageName.replace("_", "-");
+const npmPackageName = "@postgrestools/postgrestools";
 
 /**
  * platform and arch are values injected into the node runtime.
@@ -16,16 +15,16 @@ const binaryNpmPackageName = npmPackageName.replace("_", "-");
  */
 const PACKAGE_NAMES: Record<string, Record<string, string>> = {
   win32: {
-    x64: `${binaryNpmPackageName}-cli-x86_64-windows-msvc`,
-    arm64: `${binaryNpmPackageName}-cli-aarch64-windows-msvc`,
+    x64: `@postgrestools/cli-x86_64-windows-msvc`,
+    arm64: `@postgrestools/cli-aarch64-windows-msvc`,
   },
   darwin: {
-    x64: `${binaryNpmPackageName}-cli-x86_64-apple-darwin`,
-    arm64: `${binaryNpmPackageName}-cli-aarch64-apple-darwin`,
+    x64: `@postgrestools/cli-x86_64-apple-darwin`,
+    arm64: `@postgrestools/cli-aarch64-apple-darwin`,
   },
   linux: {
-    x64: `${binaryNpmPackageName}-cli-x86_64-linux-gnu`,
-    arm64: `${binaryNpmPackageName}-cli-aarch64-linux-gnu`,
+    x64: `@postgrestools/cli-x86_64-linux-gnu`,
+    arm64: `@postgrestools/cli-aarch64-linux-gnu`,
   },
 };
 
