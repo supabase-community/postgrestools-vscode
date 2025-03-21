@@ -1,4 +1,5 @@
 import { window } from "vscode";
+import { logger } from "./logger";
 
 export type Release = {
   tag_name: string;
@@ -23,7 +24,7 @@ export async function getAllReleases(opts: {
     queryParams.append("per_page", perPage.toString());
 
     const response = await fetch(
-      "https://api.github.com/repos/supabase-community/postgres_lsp/releases",
+      `https://api.github.com/repos/supabase-community/postgres_lsp/releases?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {

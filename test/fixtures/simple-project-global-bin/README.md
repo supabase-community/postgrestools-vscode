@@ -1,11 +1,11 @@
 # Simple Project
 
-A bread-and-butter project with a `postgrestools.toml` on top level and SQL files in the `test` folder.
+A bread-and-butter project with a `postgrestools.jsonc` on top level and SQL files in the `test` folder.
 You should either let the `.vscode/settings.json` point to a binary OR add a folder containing the `postgrestools(.exe)` binary to your `PATH`.
 
 ## Expectations
 
-The extension should recognize the `postgrestools.toml` file and connect with the right database. If the global binary is installed, it should not prompt for a local binary.
+The extension should recognize the `postgrestools.jsonc` file and connect with the right database. If the global binary is installed, it should not prompt for a local binary.
 
 ## Test protocol
 

@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { logger } from "./logger";
 import { state } from "./state";
 import { createExtension, destroyExtension } from "./extension";
+import { getConfig, getFullConfig } from "./config";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -13,6 +14,8 @@ export async function activate(context: vscode.ExtensionContext) {
     `PostgresTools extension ${context.extension.packageJSON.version} activated`
   );
   state.context = context;
+
+  logger.info(`Starting with config…`, { config: getFullConfig() });
 
   await createExtension();
 }

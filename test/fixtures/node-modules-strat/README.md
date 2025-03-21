@@ -1,10 +1,10 @@
 # Simple Project
 
-A bread-and-butter project with a `postgrestools.toml` on top level and SQL files in the `test` folder. The extension is installed via node_modules.
+A bread-and-butter project with a `postgrestools.jsonc` on top level and SQL files in the `test` folder. The extension is installed via node_modules.
 
 ## Expectations
 
-The extension should recognize the `postgrestools.toml` file and connect with the right database. We shouldn't have to install a global binary.
+The extension should recognize the `postgrestools.jsonc` file and connect with the right database. We shouldn't have to install a global binary.
 
 ## Test protocol
 

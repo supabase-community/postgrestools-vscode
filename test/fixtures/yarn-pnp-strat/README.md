@@ -1,10 +1,10 @@
 # Simple Project
 
-A bread-and-butter project with a `postgrestools.toml` on top level and SQL files in the `test` folder. The extension is installed via Yarn Plug'n'Play.
+A bread-and-butter project with a `postgrestools.jsonc` on top level and SQL files in the `test` folder. The extension is installed via Yarn Plug'n'Play.
 
 ## Expectations
 
-The extension should recognize the `postgrestools.toml` file and connect with the right database. We shouldn't have to install a global binary.
+The extension should recognize the `postgrestools.jsonc` file and connect with the right database. We shouldn't have to install a global binary.
 
 ## Test protocol
 

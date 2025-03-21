@@ -40,7 +40,7 @@ async function getActiveProjectForSingleFolder(
     configPath = Uri.joinPath(first.uri, userConfig);
   } else {
     logger.info("User did not specify path to config file. Using default.");
-    configPath = Uri.joinPath(first.uri, "postgrestools.toml");
+    configPath = Uri.joinPath(first.uri, "postgrestools.jsonc");
   }
 
   if (!(await fileExists(configPath))) {
