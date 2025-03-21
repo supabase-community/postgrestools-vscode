@@ -2,13 +2,9 @@
 
 The **PostgresTools extension for Visual Studio Code** brings PostgreSQL inline suggestions, linting, and type checks to VSCode and VSCode-based editors.
 
-## Installation
+## The LSP Binary
 
-The PostgresTools extension for VS Code is not yet distributed but will soon be available via the Visual Studio Marketplace and the Open VSX Registry.
-
-## Architecture
-
-The VSCode extension looks for the `postgrestools` binary and uses it to start an LSP background process. It then creates a VSCode LSP Client and connects it to the server.
+The VSCode extension looks for the [`postgrestools`](https://github.com/supabase-community/postgres_lsp) binary and uses it to start an LSP background process. It then creates a VSCode LSP Client and connects it to the server.
 
 It'll try five strategies to find the binary, in the following order:
 
