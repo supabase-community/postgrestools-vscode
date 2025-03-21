@@ -15,3 +15,7 @@ It'll try five strategies to find the binary, in the following order:
 5. If no binary will be found, you will be prompted to download a binary from `postgrestools`'s Github Releases. You can always download a CLI version via VSCode's Command Palette. (If you want to download prereleases, set `postgrestools.allowDownloadPrereleaes` in your VSCode settings.)
 
 To connect to your database, `postgrestools` needs to read a `postgrestools.jsonc` config file. By default, the extension will look for that file in your repository. You can specify an alternative path via the `postgrestools.configFile` VSCode setting.
+
+## Issues
+
+If you experience any issues, please report them at the [postgres-lsp](https://github.com/supabase-community/postgres_lsp) repository – we'll most frequently read issues there.
