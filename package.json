@@ -1,13 +1,26 @@
 {
   "name": "postgrestools-vscode",
-  "publisher": "supabase",
+  "publisher": "Supabase",
   "description": "Postgres Language Server right in your IDE.",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/supabase-community/pglt-vscode"
+  },
   "engines": {
     "vscode": "^1.97.0"
   },
+  "icon": "icon.png",
   "categories": [
-    "Other"
+    "Language Packs",
+    "Linters",
+    "Formatters"
+  ],
+  "keywords": [
+    "postgrestools",
+    "lsp",
+    "postgres",
+    "supabase"
   ],
   "main": "./out/index.js",
   "activationEvents": [
@@ -93,14 +106,16 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "publish": "vsce package && vsce publish"
   },
   "devDependencies": {
     "@types/node": "20.17.23",
     "@types/vscode": "^1.97.0",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
+    "@vscode/vsce": "3.3.0",
     "eslint": "^9.19.0",
+    "release-please": "17.0.0",
     "typescript": "^5.7.3"
   },
   "dependencies": {
