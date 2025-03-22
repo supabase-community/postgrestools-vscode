@@ -5,7 +5,7 @@
   "version": "1.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/supabase-community/pglt-vscode"
+    "url": "https://github.com/supabase-community/postgrestools-vscode"
   },
   "engines": {
     "vscode": "^1.97.0"
@@ -107,7 +107,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "publish": "vsce package && vsce publish",
-    "release-pr": "source .env && release-please release-pr --repo-url https://github.com/supabase-community/pglt-vscode --token $GITHUB_TOKEN"
+    "release-pr": "source .env && release-please release-pr --repo-url https://github.com/supabase-community/postgrestools-vscode --token $GITHUB_TOKEN"
   },
   "devDependencies": {
     "@types/node": "20.17.23",
