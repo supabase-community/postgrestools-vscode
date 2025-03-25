@@ -77,8 +77,6 @@ export const vsCodeSettingsStrategy: BinaryFindStrategy = {
 
       const postgrestools = Uri.file(resolvedPath);
 
-      logger.info(`Debugging ${postgrestools.toString()}`);
-
       if (await fileExists(postgrestools)) {
         return postgrestools;
       }
