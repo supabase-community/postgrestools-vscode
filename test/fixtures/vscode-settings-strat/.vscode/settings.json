@@ -1,0 +1,4 @@
+{
+  "postgrestools.bin": "./bin/postgrestools"
+  // "postgrestools.bin": "/bin/postgrestools"
+}
