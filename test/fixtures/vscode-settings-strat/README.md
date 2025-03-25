@@ -1,4 +1,4 @@
-# Simple Project
+# VSCode Settings Strategy
 
 A bread-and-butter project with a `postgrestools.jsonc` on top level and SQL files in the `test` folder.
 The goal is to let the `.vscode/settings.json` point to a binary and have that config working correctly.
