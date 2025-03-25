@@ -70,12 +70,14 @@ export const vsCodeSettingsStrategy: BinaryFindStrategy = {
       logger.debug("Binary Setting is a string", { binSetting });
 
       const resolvedPath = binSetting.startsWith(".")
-        ? Uri.joinPath(path, binSetting).toString()
+        ? Uri.joinPath(path, binSetting).fsPath
         : binSetting;
 
       logger.debug("Looking for binary at path", { resolvedPath });
 
       const postgrestools = Uri.file(resolvedPath);
+
+      logger.info(`Debugging ${postgrestools.toString()}`);
 
       if (await fileExists(postgrestools)) {
         return postgrestools;

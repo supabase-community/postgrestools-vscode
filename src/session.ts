@@ -43,6 +43,15 @@ export const createSession = async (
     return;
   }
 
+  if (!fileIsExecutable(findResult.bin)) {
+    window.showErrorMessage(`
+      The binary you've pointed to is not executable.
+      (${findResult.bin.fsPath})
+    `);
+    logger.error("Found binary is not executable.");
+    return;
+  }
+
   logger.info("Copying binary to temp location", {
     currentLocation: findResult.bin.fsPath,
   });
@@ -95,6 +104,8 @@ const copyBinaryToTemporaryLocation = async (
     .stdout.toString()
     .split(":")[1]
     .trim();
+
+  logger.debug(`Retrieved version from binary`, { version });
 
   const location = Uri.joinPath(
     state.context.globalStorageUri,
