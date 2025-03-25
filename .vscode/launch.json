@@ -45,6 +45,20 @@
       "sourceMapRenames": true
     },
     {
+      "name": "🧩 Debug Extension (VSCode Settings Strategy)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentKind=node",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--log=supabase.postgrestools-vscode:debug",
+        "${workspaceFolder}/test/fixtures/vscode-settings-strat"
+      ],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
+      "sourceMapRenames": true
+    },
+    {
       "name": "🧩 Debug Extension (Simple Project Global Binary)",
       "type": "extensionHost",
       "request": "launch",
