@@ -15,9 +15,6 @@ docker-compose.yml
 seed.sql
 justfile
 test/
-.release-please-manifest.json
 CHANGELOG.md
 README.md
-release-please-config.json
-
 

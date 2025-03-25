@@ -2,7 +2,7 @@
   "name": "postgrestools-vscode",
   "publisher": "Supabase",
   "description": "Postgres Language Server right in your IDE.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/supabase-community/postgrestools-vscode"
@@ -106,8 +106,7 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "publish": "vsce package && vsce publish",
-    "release-pr": "source .env && release-please release-pr --repo-url https://github.com/supabase-community/postgrestools-vscode --token $GITHUB_TOKEN"
+    "publish": "vsce package && vsce publish"
   },
   "devDependencies": {
     "@types/node": "20.17.23",
@@ -116,7 +115,6 @@
     "@typescript-eslint/parser": "^8.22.0",
     "@vscode/vsce": "3.3.0",
     "eslint": "^9.19.0",
-    "release-please": "17.0.0",
     "typescript": "^5.7.3"
   },
   "dependencies": {
