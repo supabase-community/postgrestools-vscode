@@ -23,4 +23,4 @@ To connect to your database, `postgrestools` needs to read a `postgrestools.json
 
 ## Issues
 
-If you experience any issues, please report them at the [postgres-lsp](https://github.com/supabase-community/postgres_lsp) repository – we'll most frequently read issues there.
+If you experience any issues, please report them at the [postgres language server](https://github.com/supabase-community/postgres-language-server) repository – we'll most frequently read issues there.
