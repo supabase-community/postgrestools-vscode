@@ -2,7 +2,7 @@
 
 The **PostgresTools extension for Visual Studio Code** brings PostgreSQL inline suggestions, linting, and type checks to VSCode and VSCode-based editors.
 
-It does so by implementing an [Language Server Protocol (LSP)](#whats-an-lsp) client and launching an LSP Server in the background.
+It does so by implementing an LSP client and launching an LSP Server in the background.
 
 ## What's an LSP?
 
