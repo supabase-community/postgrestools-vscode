@@ -18,7 +18,7 @@ The [Language Server Protocol](https://microsoft.github.io/language-server-proto
 - You can install the LSP server globally (e.g. via `brew` or by downloading a binary from the GitHub releases). Make sure that its binary is exposed in your $PATH – the extension will search it for a `postgrestools` on Darwin/Linux or a `postgrestools.exe` on Windows.
 - If no LSP server binary can be found via the above strategies, **and you have no `package.json` at the root of your repository**, you will be prompted to download a binary from `postgrestools`'s Github Releases. You can also do this later via the [Download Server Command](#useful-commands). Note that the above strategies will still take precedence.
 
-The found binary is copied to a temporary location in your VS Code extensions folder and run from there. When you restart the extension, that binary will be used, and the above places won't be searched.
+The found binary is copied to a temporary location in your VS Code extensions folder and run from there. When you restart the extension, the copied binary will be used, and the above places won't be searched.
 
 ## Setting Up Your Project
 
