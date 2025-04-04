@@ -54,7 +54,7 @@ You should find your remote database settings at `https://supabase.com/dashboard
 
 The extension adds six commands to your VS Code Command Palette. They are all prefixed by `PostgresTools`.
 
-- `PostgresTools: Hard Reset (Delete All Temp and Global Binaries)` is your troubleshooting weapon. It will basically remove all binaries that were copied and downloaded _by the extension_ (not those you have installed or copied yourself). The extension will then again search for a binary via the stratgies mentioned in [Setup](#setup).
+- `PostgresTools: Hard Reset (Delete All Temp and Global Binaries)` is your troubleshooting weapon. It will basically remove all binaries that were copied and downloaded _by the extension_ (not those you have installed or copied yourself). The extension will then again search for a server binary via the strategies mentioned in [the setup](#setting-up-the-lsp-server).
 - `PostgresTools: Download Server` lets you select and download the server binary. It'll be the matching version for your machine. If you set `postgrestools.allowDownloadPrereleases` to true in yor VS Code settings, you'll be able to select prereleases.
 - `PostgresTools: Get Current Version` will print the current version if the LSP server is running.
 - `PostgresTools: Start` and `PostgresTools: Stop` will stop or start the LSP server and the client.
