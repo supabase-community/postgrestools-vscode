@@ -6,7 +6,7 @@ It does so by implementing an [Language Server Protocol (LSP)](#whats-an-lsp) cl
 
 ## What's an LSP?
 
-The [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) is a protocol defined by Microsoft. Its goal is to standardize language features across many editors. If you use a modern IDE and you've ever used autocompletion or linting, you've used an LSP. The server is aware of your opened files and analyzes them in the background, the client sends requests for e.g. autocompletions or code actions to the server.
+The [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) is a protocol defined by Microsoft. Its goal is to standardize language features across many editors. If you use a modern IDE and you've ever used autocompletion or linting, you've used an LSP. The server is aware of the files you have opened and analyzes them in the background. The client sends requests for e.g. autocompletions or code actions to the server.
 
 ## Setup
 
