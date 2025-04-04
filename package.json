@@ -2,7 +2,7 @@
   "name": "postgrestools",
   "publisher": "Supabase",
   "description": "Postgres Language Server right in your IDE.",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/supabase-community/postgrestools-vscode"
@@ -41,7 +41,7 @@
         "command": "postgrestools.restart"
       },
       {
-        "title": "PostgresTools: Download CLI",
+        "title": "PostgresTools: Download Server",
         "command": "postgrestools.download"
       },
       {
