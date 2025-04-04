@@ -46,7 +46,7 @@ It'll have the following format: `postgresql://<username>:<password>@<host>:<por
 
 If you extract the values, add them to your `postgrestools.jsonc` file, and restart the extension, you should be ready to go.
 
-You can also run the LSP server against your remote database, but this might lead to small latencies and performance overhead (the LSP server runs `prepare` statements against your database for the type checking).
+You can also run the LSP server against your remote database, but this might lead to small latencies and a small performance overhead (the LSP server runs `prepare` statements against your database for the type checking).
 
 You should find your remote database settings at `https://supabase.com/dashboard/project/<yourProjectId>/settings/database?showConnect=true`.
 
