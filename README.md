@@ -58,7 +58,7 @@ The extension adds six commands to your VS Code Command Palette. They are all pr
 - `PostgresTools: Download Server` lets you select and download the server binary. It'll be the matching version for your machine. If you set `postgrestools.allowDownloadPrereleases` to true in yor VS Code settings, you'll be able to select prereleases.
 - `PostgresTools: Get Current Version` will print the current version if the LSP server is running.
 - `PostgresTools: Start` and `PostgresTools: Stop` will stop or start the LSP server and the client.
-- `PostgresTools: Restart` first run stop and start in succession.
+- `PostgresTools: Restart` runs stop and start in succession.
 
 ## Troubleshooting
 
