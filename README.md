@@ -32,7 +32,7 @@ If you omit the section, on the other hand, those features won't be enabled, and
 
 To verify that the server is installed and running correctly, you can use the "Get Current Version" command listed in [Useful Commands](#useful-commands).
 
-To verify that the client works as intended, open a `.sql` file and write some gibberish – you should get red squiggly lines.
+To verify that the client works as intended, open a `.sql` file and write some gibberish – you should get red squiggly lines from `pg(syntax)`.
 
 ## Working With Supabase
 
