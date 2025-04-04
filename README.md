@@ -10,10 +10,10 @@ The [Language Server Protocol](https://microsoft.github.io/language-server-proto
 
 ## Setting Up the LSP Server
 
-**First**, you need the LSP server binary. The [Postgres language server](https://github.com/supabase-community/postgres-language-server) is written in Rust and is therefore compiled to various binaries for various machines. You can set up the binary via one of five ways:
+**First**, you need the LSP server binary. The [Postgres language server](https://github.com/supabase-community/postgres-language-server) is written in Rust and is therefore compiled to various binaries for various machines. You can set up the binary via one of five ways. The extensions will check the ways in the following order:
 
 - The `postgrestools.bin` VSCode setting can point to a binary with relative or absolute paths. You can use this if you want to download a specific binary from one of the [Postgres language server](https://github.com/supabase-community/postgres-language-server) releases and place it in your project.
-- If you use node, you can simply run `npm i -D @postgrestools/postgrestools`. Once you restart the extension, it should look for the server binary in your `node_modules`.
+- **Recommended**: If you use node, you can simply run `npm i -D @postgrestools/postgrestools`. Once you restart the extension, it should look for the server binary in your `node_modules`.
 - If you use node but you install your packages via Yarn Plug'n'Play, you can still install `@postgrestools/postgrestools`, and the extension will check your `.pnp.cjs` file for a binary.
 - You can install the LSP server globally. Make sure that its binary is exposed in your $PATH – the extension will search it for a `postgrestools` on Darwin/Linux or a `postgrestools.exe` on Windows.
 - If no LSP server binary can be found via the above strategies, **and you have no `package.json` at the root of your repository**, you will be prompted to download a binary from `postgrestools`'s Github Releases.
