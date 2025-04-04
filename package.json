@@ -41,7 +41,7 @@
         "command": "postgrestools.restart"
       },
       {
-        "title": "PostgresTools: Download CLI",
+        "title": "PostgresTools: Download Server",
         "command": "postgrestools.download"
       },
       {
