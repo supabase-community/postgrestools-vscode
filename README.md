@@ -62,7 +62,7 @@ The extension adds six commands to your VS Code Command Palette. They are all pr
 
 ## Troubleshooting
 
-1. First, try restarting the extension via the `PostgresTools: Hard Reset (...)` command.
+1. First, try restarting the extension via the `PostgresTools: Hard Reset (...)` command mentioned above.
 2. Open your VS Code Terminal, select the tab `Output`, and select one of the `postgrestools` extensions on the right. You might see what went wrong in the logs.
 
 ## Issues
