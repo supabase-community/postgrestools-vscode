@@ -22,7 +22,7 @@ The found binary is copied to a temporary location in your VS Code extensions fo
 
 ## Setting Up Your Project
 
-**Second**, you need a `postgrestools.jsonc` file at the root of your repository (or, use a custom file location and point to it via the `postgrestools.configFile` setting.). You can find sane defaults in the [docs](https://pgtools.dev/#configuration).
+**Second**, you need a `postgrestools.jsonc` file at the root of your repository (or, use a custom file location and point to it via the `postgrestools.configFile` setting). You can find sane defaults in the [docs](https://pgtools.dev/#configuration).
 
 When you specify the `db` section, the LSP server will connect to your database and gather intel from there. This makes it possible to provide autocompletions and type checks.
 
