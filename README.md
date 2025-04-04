@@ -8,7 +8,7 @@ It does so by implementing an [Language Server Protocol (LSP)](#whats-an-lsp) cl
 
 The [Language Server Protocol](https://microsoft.github.io/language-server-protocol/) is a protocol defined by Microsoft. Its goal is to standardize language features across many editors. If you use a modern IDE and you've ever used autocompletion or linting, you've used an LSP. The server is aware of the files you have opened and analyzes them in the background. The client sends requests for e.g. autocompletions or code actions to the server.
 
-## Setup
+## Setting Up the LSP Server
 
 **First**, you need the LSP server binary. The [Postgres language server](https://github.com/supabase-community/postgres-language-server) is written in Rust and is therefore compiled to various binaries for various machines. You can set up the binary via one of five ways:
 
@@ -19,6 +19,8 @@ The [Language Server Protocol](https://microsoft.github.io/language-server-proto
 - If no LSP server binary can be found via the above strategies, **and you have no `package.json` at the root of your repository**, you will be prompted to download a binary from `postgrestools`'s Github Releases.
 
 The found binary is copied to a temporary location in your VS Code extensions folder and run from there. When you restart the extension, that binary will be used, and the above places won't be searched.
+
+## Setting Up Your Project
 
 **Second**, you need a `postgrestools.jsonc` file at the root of your repository (or, use a custom file location and point to it via the `postgrestools.configFile` setting.). You can find sane defaults in the [docs](https://pgtools.dev/#configuration).
 
