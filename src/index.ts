@@ -15,7 +15,9 @@ export async function activate(context: vscode.ExtensionContext) {
   );
   state.context = context;
 
-  logger.info(`Starting with config…`, { config: getFullConfig() });
+  const config = getFullConfig();
+
+  logger.info(`Starting with config…`, { config });
 
   await createExtension();
 }

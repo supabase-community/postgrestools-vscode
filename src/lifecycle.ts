@@ -57,5 +57,6 @@ const doStop = async () => {
 
   if (state.activeSession) {
     destroySession(state.activeSession);
+    state.activeSession = undefined;
   }
 };
