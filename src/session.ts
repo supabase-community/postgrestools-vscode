@@ -19,6 +19,7 @@ import { getActiveProject, type Project } from "./project";
 import { state } from "./state";
 import { fileExists, fileIsExecutable, subtractURI } from "./utils";
 import { CONSTANTS, OperatingMode } from "./constants";
+import { getConfig, isEnabledForFolder } from "./config";
 
 export type Session = {
   bin: Uri;
@@ -172,6 +173,16 @@ export const createActiveSession = async () => {
 
   if (!activeProject) {
     logger.info("No active project found. Aborting.");
+    return;
+  }
+
+  if (activeProject.folder && !isEnabledForFolder(activeProject.folder)) {
+    logger.info("Extension disabled for project.");
+    return;
+  }
+
+  if (!activeProject.folder && !getConfig<boolean>("enabled")) {
+    logger.info("Extension disabled.");
     return;
   }
 
