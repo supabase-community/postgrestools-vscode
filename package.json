@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/supabase-community/postgrestools-vscode"
   },
+  "bugs": {
+    "url": "https://github.com/supabase-community/postgres-language-server"
+  },
   "engines": {
     "vscode": "^1.96.2"
   },
