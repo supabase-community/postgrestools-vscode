@@ -351,23 +351,23 @@ const createLspTraceLogger = (project?: Project): LogOutputChannel => {
  * not yet been saved to disk (untitled).
  */
 const createDocumentSelector = (project?: Project): DocumentFilter[] => {
-  if (project) {
-    return [
-      {
-        language: "sql",
+  return ["sql", "postgres"].flatMap((language) => {
+    if (project) {
+      return {
+        language,
         scheme: "file",
         pattern: Uri.joinPath(project.path, "**", "*").fsPath.replaceAll(
           "\\",
           "/"
         ),
-      },
-    ];
-  }
+      };
+    }
 
-  return ["untitled", "vscode-userdata"].map((scheme) => ({
-    language: "sql",
-    scheme,
-  }));
+    return ["untitled", "vscode-userdata"].map((scheme) => ({
+      language,
+      scheme,
+    }));
+  });
 };
 
 class PostgresToolsLanguageClient extends LanguageClient {

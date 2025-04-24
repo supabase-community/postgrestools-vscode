@@ -47,7 +47,8 @@ export const updateStatusBar = () => {
 
 export const updateHidden = (editor: TextEditor | undefined) => {
   state.hidden =
-    editor?.document === undefined || editor.document.languageId !== "sql";
+    editor?.document === undefined ||
+    !["sql", "postgres"].includes(editor.document.languageId);
 };
 
 const getLspVersion = () => {
