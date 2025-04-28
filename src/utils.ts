@@ -3,6 +3,7 @@ import { logger } from "./logger";
 import { state } from "./state";
 import { CONSTANTS } from "./constants";
 import { accessSync, constants } from "node:fs";
+import { spawnSync } from "node:child_process";
 
 export function debounce<TArgs extends unknown[]>(
   fn: (...args: TArgs) => void,
@@ -113,4 +114,18 @@ export function fileIsExecutable(uri: Uri): boolean {
   } catch {
     return false;
   }
+}
+
+// Retrieve the version of the binary
+// We call postgrestools with --version which outputs the version in the format
+// of "Version: 1.0.0"
+export async function getVersion(bin: Uri): Promise<string | null> {
+  if (!(await fileExists(bin))) {
+    return null;
+  }
+
+  return spawnSync(bin.fsPath, ["--version"])
+    .stdout.toString()
+    .split(":")[1]
+    .trim();
 }

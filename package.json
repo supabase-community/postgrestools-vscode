@@ -71,6 +71,12 @@
           "default": false,
           "scope": "resource"
         },
+        "postgrestools.allowVersionChecks": {
+          "type": "boolean",
+          "description": "If set, the extension will check periodically whether a new version for PostgresTools is available and if so notify the user.",
+          "default": true,
+          "scope": "resource"
+        },
         "postgrestools.configFile": {
           "type": "string",
           "description": "Path to the `postgrestools.jsonc` file. You don't need to set this if the file is on root level of your project.",

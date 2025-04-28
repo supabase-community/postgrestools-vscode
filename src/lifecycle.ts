@@ -1,4 +1,5 @@
 import { logger } from "./logger";
+import { Releases } from "./releases";
 import { createActiveSession, destroySession } from "./session";
 import { state } from "./state";
 
@@ -37,6 +38,7 @@ export const restart = async () => {
 
 const doStart = async () => {
   try {
+    state.releases = await Releases.load();
     await createActiveSession();
   } catch (e: unknown) {
     if (e instanceof Error) {

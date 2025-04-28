@@ -1,7 +1,7 @@
 import { ExtensionContext } from "vscode";
-
-type Project = any;
-type Session = any;
+import { Releases } from "./releases";
+import { Project } from "./project";
+import { Session } from "./session";
 
 export type State = {
   state:
@@ -17,6 +17,7 @@ export type State = {
   activeSession?: Session;
   context: ExtensionContext;
   hidden: boolean;
+  releases: Releases;
 };
 
 const _state: State = {
@@ -30,7 +31,7 @@ export const state = new Proxy(_state, {
   },
   set(target, prop, value, receiver) {
     if (Reflect.set(target, prop, value, receiver)) {
-      // udpate something
+      // update something
       return true;
     }
 
