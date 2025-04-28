@@ -2,7 +2,7 @@
   "name": "postgrestools",
   "publisher": "Supabase",
   "description": "Postgres Language Server right in your IDE.",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/supabase-community/postgrestools-vscode"
@@ -69,6 +69,12 @@
           "type": "boolean",
           "description": "Allows selecting prereleases when downloading the binary via this extension",
           "default": false,
+          "scope": "resource"
+        },
+        "postgrestools.allowVersionChecks": {
+          "type": "boolean",
+          "description": "If set, the extension will check periodically whether a new version for PostgresTools is available and if so notify the user.",
+          "default": true,
           "scope": "resource"
         },
         "postgrestools.configFile": {

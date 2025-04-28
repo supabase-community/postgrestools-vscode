@@ -1,9 +1,14 @@
 import { window } from "vscode";
-import { downloadPglt, getDownloadedVersion } from "./downloader";
+import { downloadPglt, getDownloadedBinary } from "./downloader";
 import { restart, start, stop } from "./lifecycle";
 import { logger } from "./logger";
 import { state } from "./state";
-import { clearGlobalBinaries, clearTemporaryBinaries } from "./utils";
+import {
+  clearGlobalBinaries,
+  clearTemporaryBinaries,
+  getVersion,
+} from "./utils";
+import { Releases } from "./releases";
 
 /**
  * These commands are exposed to the user via the Command Palette.
@@ -37,20 +42,36 @@ export class UserFacingCommands {
     await stop();
     await clearTemporaryBinaries();
     await clearGlobalBinaries();
-    await state.context.globalState.update("downloadedVersion", undefined);
+
+    await Releases.refresh();
+
+    await state.context.globalState.update("lastNotifiedOfUpdate", undefined);
+
     state.activeSession = undefined;
     state.activeProject = undefined;
     logger.info("PostgresTools extension was reset");
+
     await start();
   }
 
   static async currentVersion() {
-    const result = await getDownloadedVersion();
-    if (!result) {
+    const session = state.activeSession;
+
+    if (!session) {
+      window.showInformationMessage("No PostgresTools version installed.");
+      return;
+    }
+
+    const version = await getVersion(session.bin);
+
+    if (!version) {
       window.showInformationMessage("No PostgresTools version installed.");
     } else {
       window.showInformationMessage(
-        `Currently installed PostgresTools version is ${result.version}.`
+        `Currently installed PostgresTools version is ${version}.`
+      );
+      window.showInformationMessage(
+        `Using binary from "${session.binaryStrategyLabel}".`
       );
     }
   }

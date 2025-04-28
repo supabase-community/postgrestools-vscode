@@ -5,7 +5,7 @@ import { CONSTANTS } from "./constants";
 import { fileExists } from "./utils";
 import { createRequire } from "node:module";
 import { getConfig } from "./config";
-import { downloadPglt, getDownloadedVersion } from "./downloader";
+import { downloadPglt, getDownloadedBinary } from "./downloader";
 
 export interface BinaryFindStrategy {
   name: string;
@@ -280,14 +280,14 @@ export const downloadPgltStrategy: BinaryFindStrategy = {
   async find() {
     logger.debug(`Trying to find downloaded PostgresTools binary`);
 
-    const downloadedVersion = await getDownloadedVersion();
+    const downloadedBinary = await getDownloadedBinary();
 
-    if (downloadedVersion) {
+    if (downloadedBinary) {
       logger.info(
-        `Using previously downloaded version ${downloadedVersion.version} at ${downloadedVersion.binPath.fsPath}`
+        `Using previously downloaded version ${downloadedBinary.version} at ${downloadedBinary.binPath.fsPath}`
       );
 
-      return downloadedVersion.binPath;
+      return downloadedBinary.binPath;
     }
 
     const proceed =

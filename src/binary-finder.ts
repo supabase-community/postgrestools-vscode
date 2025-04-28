@@ -1,4 +1,4 @@
-import { RelativePattern, Uri, workspace } from "vscode";
+import { Uri } from "vscode";
 import {
   BinaryFindStrategy,
   downloadPgltStrategy,
@@ -10,6 +10,7 @@ import {
 import { logger } from "./logger";
 
 type Strategy = {
+  label: string;
   strategy: BinaryFindStrategy;
   onSuccess: (u: Uri) => void;
   condition?: (path?: Uri) => Promise<boolean>;
@@ -17,6 +18,7 @@ type Strategy = {
 
 const LOCAL_STRATEGIES: Strategy[] = [
   {
+    label: "VSCode Settings",
     strategy: vsCodeSettingsStrategy,
     onSuccess: (uri) =>
       logger.debug(`Found Binary in VSCode Settings (postgrestools.bin)`, {
@@ -24,6 +26,7 @@ const LOCAL_STRATEGIES: Strategy[] = [
       }),
   },
   {
+    label: "NPM node_modules",
     strategy: nodeModulesStrategy,
     onSuccess: (uri) =>
       logger.debug(`Found Binary in Node Modules`, {
@@ -31,6 +34,7 @@ const LOCAL_STRATEGIES: Strategy[] = [
       }),
   },
   {
+    label: "Yarn Plug'n'Play node_modules",
     strategy: yarnPnpStrategy,
     onSuccess: (uri) =>
       logger.debug(`Found Binary in Yarn PnP`, {
@@ -38,6 +42,7 @@ const LOCAL_STRATEGIES: Strategy[] = [
       }),
   },
   {
+    label: "PATH Environment Variable",
     strategy: pathEnvironmentVariableStrategy,
     onSuccess: (uri) =>
       logger.debug(`Found Binary in PATH Environment Variable`, {
@@ -45,6 +50,7 @@ const LOCAL_STRATEGIES: Strategy[] = [
       }),
   },
   {
+    label: "Downloaded Binary",
     strategy: downloadPgltStrategy,
     onSuccess: (uri) =>
       logger.debug(`Found downloaded binary`, {
@@ -65,7 +71,7 @@ export class BinaryFinder {
   }
 
   private static async attemptFind(strategies: Strategy[], path: Uri) {
-    for (const { strategy, onSuccess, condition } of strategies) {
+    for (const { strategy, onSuccess, condition, label } of strategies) {
       if (condition && !(await condition(path))) {
         continue;
       }
@@ -74,7 +80,7 @@ export class BinaryFinder {
         const binary = await strategy.find(path);
         if (binary) {
           onSuccess(binary);
-          return { bin: binary };
+          return { bin: binary, label };
         } else {
           logger.info(`Binary not found with strategy`, {
             strategy: strategy.name,

@@ -17,12 +17,19 @@ import { BinaryFinder } from "./binary-finder";
 import { logger } from "./logger";
 import { getActiveProject, type Project } from "./project";
 import { state } from "./state";
-import { fileExists, fileIsExecutable, subtractURI } from "./utils";
+import {
+  daysToMs,
+  fileExists,
+  fileIsExecutable,
+  getVersion,
+  subtractURI,
+} from "./utils";
 import { CONSTANTS, OperatingMode } from "./constants";
 import { getConfig, isEnabledForFolder } from "./config";
 
 export type Session = {
   bin: Uri;
+  binaryStrategyLabel: string;
   tempBin?: Uri;
   project?: Project;
   client: LanguageClient;
@@ -57,6 +64,31 @@ export const createSession = async (
     currentLocation: findResult.bin.fsPath,
   });
 
+  const version = await getVersion(findResult.bin);
+  if (!version) {
+    throw new Error(
+      "Just verified we have an executable file. Version should exist."
+    );
+  }
+
+  const lastNotifiedOfUpdate =
+    state.context.globalState.get<string>("lastNotifiedOfUpdate") ||
+    new Date(0).toISOString();
+
+  if (
+    state.releases.versionOutdated(version) &&
+    state.releases.latestVersion() &&
+    Date.now() - new Date(lastNotifiedOfUpdate).getTime() > daysToMs(3)
+  ) {
+    window.showInformationMessage(
+      `PostgresTools ${version} is outdated, consider updating to ${state.releases.latestVersion()}.`
+    );
+    await state.context.globalState.update(
+      "lastNotifiedOfUpdate",
+      new Date().toISOString()
+    );
+  }
+
   // Copy the binary to a temporary location, and run it from there
   // so that the original binary can be updated without locking issues.
   // We'll keep track of that temporary location in the session and
@@ -71,6 +103,7 @@ export const createSession = async (
     bin: findResult.bin,
     tempBin: tempBin,
     project,
+    binaryStrategyLabel: findResult.label,
     client: createLanguageClient(tempBin ?? findResult.bin, project),
   };
 };
@@ -98,13 +131,12 @@ export const destroySession = async (session: Session) => {
 const copyBinaryToTemporaryLocation = async (
   bin: Uri
 ): Promise<Uri | undefined> => {
-  // Retrieve the version of the binary
-  // We call postgrestools with --version which outputs the version in the format
-  // of "Version: 1.0.0"
-  const version = spawnSync(bin.fsPath, ["--version"])
-    .stdout.toString()
-    .split(":")[1]
-    .trim();
+  const version = await getVersion(bin);
+  if (!version) {
+    window.showErrorMessage(
+      "Tried to copy binary to temporary location, but it does not exist. Invalid state."
+    );
+  }
 
   logger.debug(`Retrieved version from binary`, { version });
 

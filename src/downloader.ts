@@ -8,10 +8,8 @@ import {
 import { logger } from "./logger";
 import { state } from "./state";
 import { CONSTANTS } from "./constants";
-import { fileExists } from "./utils";
-import { getConfig } from "./config";
+import { fileExists, getVersion } from "./utils";
 import { chmodSync } from "fs";
-import { getAllReleases } from "./releases";
 
 export async function downloadPglt(): Promise<Uri | null> {
   logger.debug(`Downloading PostgresTools`);
@@ -31,7 +29,7 @@ export async function downloadPglt(): Promise<Uri | null> {
     () => downloadPgltVersion(versionToDownload.label)
   );
 
-  const downloaded = await getDownloadedVersion();
+  const downloaded = await getDownloadedBinary();
 
   return downloaded?.binPath ?? null;
 }
@@ -67,7 +65,6 @@ async function downloadPgltVersion(version: string): Promise<void> {
     const successMsg = `Downloaded PostgresTools ${version} to ${binPath.fsPath}`;
     logger.info(successMsg);
     window.showInformationMessage(successMsg);
-    state.context.globalState.update("downloadedVersion", version);
   } catch (error) {
     logger.error(`Failed to save downloaded binary`, { error });
     window.showErrorMessage(`Failed to save binary.\n\n${error}`);
@@ -75,39 +72,34 @@ async function downloadPgltVersion(version: string): Promise<void> {
   }
 }
 
-export async function getDownloadedVersion(): Promise<{
+export async function getDownloadedBinary(): Promise<{
   version: string;
   binPath: Uri;
 } | null> {
   logger.debug(`Getting downloaded version`);
 
-  const version = state.context.globalState.get<string>("downloadedVersion");
-  if (!version) {
-    logger.debug(`No downloaded version stored in global state context.`);
-    return null;
-  }
+  const bin = getInstalledBinaryPath();
 
-  const binPath = getInstalledBinaryPath();
+  if (await fileExists(bin)) {
+    const version = await getVersion(bin);
+    if (!version) {
+      throw new Error("Just verified file exists, but it doesn't anymore.");
+    }
 
-  if (await fileExists(binPath)) {
     logger.debug(`Found downloaded version and binary`, {
-      path: binPath.fsPath,
+      path: bin.fsPath,
       version,
     });
 
     return {
-      binPath,
+      binPath: bin,
       version,
     };
   }
 
-  logger.info(
-    `Downloaded version found in global state context, but binary does not exist.`,
-    {
-      binPath,
-      version,
-    }
-  );
+  logger.info(`Downloaded binary does not exist.`, {
+    binPath: bin,
+  });
 
   return null;
 }
@@ -117,22 +109,15 @@ async function promptVersionToDownload() {
 
   const itemsPromise: Promise<QuickPickItem[]> = new Promise(
     async (resolve) => {
-      const downloadedVersion = await getDownloadedVersion()
+      const downloadedBinary = await getDownloadedBinary()
         .then((it) => it?.version)
         .catch(() => undefined);
 
-      logger.debug(`Retrieved downloaded version`, { downloadedVersion });
-
-      const withPrereleases =
-        getConfig<boolean>("allowDownloadPrereleases") ?? false;
-
-      const availableVersions = await getAllReleases({
-        withPrereleases,
-      }).catch(() => []);
-
-      logger.debug(`Found ${availableVersions.length} downloadable versions`, {
-        withPrereleases,
+      logger.debug(`Retrieved downloaded version`, {
+        downloadedVersion: downloadedBinary,
       });
+
+      const availableVersions = state.releases.all();
 
       const items: QuickPickItem[] = availableVersions.map((release, index) => {
         const descriptions = [];
@@ -145,13 +130,13 @@ async function promptVersionToDownload() {
           descriptions.push("prerelease");
         }
 
+        if (downloadedBinary === release.tag_name) {
+          descriptions.push("(currently installed)");
+        }
+
         return {
           label: release.tag_name,
           description: descriptions.join(", "),
-          detail:
-            downloadedVersion === release.tag_name
-              ? "(currently installed)"
-              : "",
           alwaysShow: index < 3,
         };
       });
