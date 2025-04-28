@@ -17,7 +17,7 @@ The [Language Server Protocol](https://microsoft.github.io/language-server-proto
 - If you use node but you install your packages via Yarn Plug'n'Play, you can still install `@postgrestools/postgrestools`, and the extension will check your `.pnp.cjs` file for a binary.
 - You can install the LSP server globally (e.g. via `brew` or by downloading a binary from the GitHub releases). Make sure that its binary is exposed in your $PATH – the extension will search it for a `postgrestools` on Darwin/Linux or a `postgrestools.exe` on Windows.
 - If no LSP server binary can be found via the above strategies, you will be prompted to download a binary from `postgrestools`'s GitHub Releases. You can also do this later via the [Download Server Command](#useful-commands). Note that the above strategies will still take precedence.
-The found binary is copied to a temporary location in your VS Code extensions folder and run from there. When you restart the extension, the copied binary will be used, and the above places won't be searched.
+  The found binary is copied to a temporary location in your VS Code extensions folder and run from there. When you restart the extension, the copied binary will be used, and the above places won't be searched.
 
 ## Setting Up Your Project
 
@@ -82,7 +82,7 @@ You will only be prompted if all other [strategies](#setting-up-the-lsp-server) 
 
 - Using the `postgrestool.bin` setting -> Is the binary at the configured location?
 - Using `npm` or `yarn` -> Are the `node_modules` installed correctly?
-- Using the `PATH` environment variable -> Can you run `$ which postgrestools`, is the binary at the expected location?
+- Using the `PATH` environment variable -> Can you run `$ postgrestools --version`, is the binary at the expected location?
 
 ## Issues
 
