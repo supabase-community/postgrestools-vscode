@@ -77,6 +77,14 @@ If you can't find the platform specific package, please just rerun `npm install`
 
 If that still doesn't help, run `npm uninstall @postgrestools/postgrestools` and use the download server strategy mentioned [here.](#setting-up-the-lsp-server)
 
+### Why am I prompted to install the PostgresTools binary?
+
+You will only be prompted if all other [strategies](#setting-up-the-lsp-server) fail. If you set out to use a different strategy, make sure the binary/node package is actually at the expected location:
+
+Using the `postgrestool.bin` setting -> Is the binary at the configured location?
+Using `npm` or `yarn` -> Are the `node_modules` installed correctly?
+Using the `PATH` environment variable -> Can you run `$ which postgrestools`, is the binary at the expected location?
+
 ## Issues
 
 If you experience any issues, please report them at the [postgres language server](https://github.com/supabase-community/postgres-language-server) repository – we'll most frequently read issues there.
