@@ -2,7 +2,7 @@
   "name": "postgrestools",
   "publisher": "Supabase",
   "description": "Postgres Language Server right in your IDE.",
-  "version": "1.1.7",
+  "version": "1.2.7",
   "repository": {
     "type": "git",
     "url": "https://github.com/supabase-community/postgrestools-vscode"
