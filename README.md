@@ -81,9 +81,9 @@ If that still doesn't help, run `npm uninstall @postgrestools/postgrestools` and
 
 You will only be prompted if all other [strategies](#setting-up-the-lsp-server) fail. If you set out to use a different strategy, make sure the binary/node package is actually at the expected location:
 
-Using the `postgrestool.bin` setting -> Is the binary at the configured location?
-Using `npm` or `yarn` -> Are the `node_modules` installed correctly?
-Using the `PATH` environment variable -> Can you run `$ which postgrestools`, is the binary at the expected location?
+- Using the `postgrestool.bin` setting -> Is the binary at the configured location?
+- Using `npm` or `yarn` -> Are the `node_modules` installed correctly?
+- Using the `PATH` environment variable -> Can you run `$ which postgrestools`, is the binary at the expected location?
 
 ## Issues
 
