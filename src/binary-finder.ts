@@ -50,16 +50,6 @@ const LOCAL_STRATEGIES: Strategy[] = [
       logger.debug(`Found downloaded binary`, {
         path: uri.fsPath,
       }),
-
-    /**
-     * We don't want to encourage users downloading the binary if they
-     * could also install it via `npm` (or other Node package managers).
-     */
-    condition: async (path) =>
-      !path || // `path` should never be falsy in a local strategy
-      workspace
-        .findFiles(new RelativePattern(path, "**/package.json"))
-        .then((rs) => rs.length === 0),
   },
 ];
 
