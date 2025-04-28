@@ -292,7 +292,7 @@ export const downloadPgltStrategy: BinaryFindStrategy = {
 
     const proceed =
       (await window.showInformationMessage(
-        "You've opened a supported file outside of a PostgresTools project, and no installed PostgresTools binary could not be found on your system. Would you like to download and install PostgresTools?",
+        "You've opened a supported file outside of a PostgresTools project, and no installed PostgresTools binary could be found on your system. Would you like to download and install PostgresTools?",
         "Download and install",
         "No"
       )) === "Download and install";

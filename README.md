@@ -13,12 +13,11 @@ The [Language Server Protocol](https://microsoft.github.io/language-server-proto
 **First**, you need the LSP server binary. The [Postgres language server](https://github.com/supabase-community/postgres-language-server) is written in Rust and is therefore compiled to various binaries for various machines. You can set it up via one of five strategies. The extensions will check them in the following order:
 
 - The `postgrestools.bin` VSCode setting can point to a binary with relative or absolute paths. You can use this if you want to download a specific binary from one of the [Postgres language server](https://github.com/supabase-community/postgres-language-server) releases and place it in your project.
-- **Recommended**: If you use node, you can simply run `npm i -D @postgrestools/postgrestools`. Once you restart the extension, it should look for the server binary in your `node_modules`.
+- **Recommended**: If you use node, you can simply run `npm i -D @postgrestools/postgrestools@latest`. Once you restart the extension, it should look for the server binary in your `node_modules`.
 - If you use node but you install your packages via Yarn Plug'n'Play, you can still install `@postgrestools/postgrestools`, and the extension will check your `.pnp.cjs` file for a binary.
 - You can install the LSP server globally (e.g. via `brew` or by downloading a binary from the GitHub releases). Make sure that its binary is exposed in your $PATH – the extension will search it for a `postgrestools` on Darwin/Linux or a `postgrestools.exe` on Windows.
-- If no LSP server binary can be found via the above strategies, **and you have no `package.json` at the root of your repository**, you will be prompted to download a binary from `postgrestools`'s Github Releases. You can also do this later via the [Download Server Command](#useful-commands). Note that the above strategies will still take precedence.
-
-The found binary is copied to a temporary location in your VS Code extensions folder and run from there. When you restart the extension, the copied binary will be used, and the above places won't be searched.
+- If no LSP server binary can be found via the above strategies, you will be prompted to download a binary from `postgrestools`'s GitHub Releases. You can also do this later via the [Download Server Command](#useful-commands). Note that the above strategies will still take precedence.
+  The found binary is copied to a temporary location in your VS Code extensions folder and run from there. When you restart the extension, the copied binary will be used, and the above places won't be searched.
 
 ## Setting Up Your Project
 
@@ -64,6 +63,26 @@ The extension adds six commands to your VS Code Command Palette. They are all pr
 
 1. First, try restarting the extension via the `PostgresTools: Hard Reset (...)` command mentioned above.
 2. Open your VS Code Terminal, select the tab `Output`, and select one of the `postgrestools` extensions on the right. You might see what went wrong in the logs.
+
+## FAQ
+
+### I've installed the package via NPM but getting an `Error: Cannot find module '@postgrestools/cli-x86_64-windows-msvc/postgrestools.exe'`.
+
+The platform-specific package is installed as an `optionalDependency`. If it can't be installed for whatever reason, `npm` won't complain. It's likely that something went wrong during the installation.
+
+Another known issue is that npm installs the optional dependency at an unexpected location. It _should_ be located at `node_modules/@postgrestools/cli-aarch64-apple-darwin` (or another platform-specific package).
+
+If you can't find the platform specific package, please just rerun `npm install` a couple of times.
+
+If that still doesn't help, run `npm uninstall @postgrestools/postgrestools` and use the download server strategy mentioned [here.](#setting-up-the-lsp-server)
+
+### Why am I prompted to install the PostgresTools binary?
+
+You will only be prompted if all other [strategies](#setting-up-the-lsp-server) fail. If you set out to use a different strategy, make sure the binary/node package is actually at the expected location:
+
+- Using the `postgrestool.bin` setting -> Is the binary at the configured location?
+- Using `npm` or `yarn` -> Are the `node_modules` installed correctly?
+- Using the `PATH` environment variable -> Can you run `$ postgrestools --version`, is the binary at the expected location?
 
 ## Issues
 
