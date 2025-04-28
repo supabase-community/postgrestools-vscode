@@ -17,7 +17,13 @@ import { BinaryFinder } from "./binary-finder";
 import { logger } from "./logger";
 import { getActiveProject, type Project } from "./project";
 import { state } from "./state";
-import { fileExists, fileIsExecutable, getVersion, subtractURI } from "./utils";
+import {
+  daysToMs,
+  fileExists,
+  fileIsExecutable,
+  getVersion,
+  subtractURI,
+} from "./utils";
 import { CONSTANTS, OperatingMode } from "./constants";
 import { getConfig, isEnabledForFolder } from "./config";
 
@@ -65,12 +71,21 @@ export const createSession = async (
     );
   }
 
+  const lastNotifiedOfUpdate =
+    state.context.globalState.get<string>("lastNotifiedOfUpdate") ||
+    new Date(0).toISOString();
+
   if (
     state.releases.versionOutdated(version) &&
-    state.releases.latestVersion()
+    state.releases.latestVersion() &&
+    Date.now() - new Date(lastNotifiedOfUpdate).getTime() > daysToMs(3)
   ) {
     window.showInformationMessage(
       `PostgresTools ${version} is outdated, consider updating to ${state.releases.latestVersion()}.`
+    );
+    await state.context.globalState.update(
+      "lastNotifiedOfUpdate",
+      new Date().toISOString()
     );
   }
 

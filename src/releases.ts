@@ -2,6 +2,7 @@ import { window } from "vscode";
 import { logger } from "./logger";
 import { getConfig } from "./config";
 import { state } from "./state";
+import { daysToMs } from "./utils";
 
 export type Release = {
   tag_name: string;
@@ -10,7 +11,6 @@ export type Release = {
   prerelease: boolean;
 };
 
-const THREE_DAYS = 1000 * 60 * 60 * 24 * 3;
 const CACHE_KEY = "releases";
 
 type Cached = {
@@ -40,7 +40,7 @@ async function fromCache(): Promise<Release[] | null> {
     return null;
   }
 
-  if (Date.now() - new Date(cached.cachedAt).getTime() >= THREE_DAYS) {
+  if (Date.now() - new Date(cached.cachedAt).getTime() >= daysToMs(3)) {
     logger.debug(`Stale cached releases found. Invalidating.`);
     await setCache(null);
     return null;

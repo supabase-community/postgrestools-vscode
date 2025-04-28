@@ -45,6 +45,8 @@ export class UserFacingCommands {
 
     await Releases.refresh();
 
+    await state.context.globalState.update("lastNotifiedOfUpdate", undefined);
+
     state.activeSession = undefined;
     state.activeProject = undefined;
     logger.info("PostgresTools extension was reset");

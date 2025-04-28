@@ -129,3 +129,7 @@ export async function getVersion(bin: Uri): Promise<string | null> {
     .split(":")[1]
     .trim();
 }
+
+export function daysToMs(days: number) {
+  return days * 24 * 60 * 60 * 1000;
+}

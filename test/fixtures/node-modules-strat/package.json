@@ -1,6 +1,6 @@
 {
   "name": "my-project",
   "devDependencies": {
-    "@postgrestools/postgrestools": "0.6.1"
+    "@postgrestools/postgrestools": "0.4.0"
   }
 }
