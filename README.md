@@ -64,7 +64,7 @@ The extension adds seven commands to your VS Code Command Palette. They are all 
 
 1. First, try restarting the extension via the `PostgresTools: Hard Reset (...)` command mentioned above.
 2. Open your VS Code Terminal, select the tab `Output`, and select one of the `postgrestools` extensions on the right. You might see what went wrong in the logs.
-3. If you want to open a GitHub issue, it can sometimes help us to attach the LSP server log file. We provide the `PostgresTools: Copy Latest Server Logfile` command for that.
+3. If you want to open a GitHub issue, it can sometimes help us if you attach the LSP server log file. We provide the `PostgresTools: Copy Latest Server Logfile` command to make that as easy as possible.
 
 ## FAQ
 
