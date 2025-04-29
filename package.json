@@ -54,6 +54,10 @@
       {
         "title": "PostgresTools: Get Current Version",
         "command": "postgrestools.currentVersion"
+      },
+      {
+        "title": "PostgresTools: Copy Latest Server Logfile",
+        "command": "postgrestools.copyLatestLogfile"
       }
     ],
     "configuration": {

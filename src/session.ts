@@ -218,6 +218,7 @@ export const createActiveSession = async () => {
     return;
   }
 
+  state.activeProject = activeProject;
   state.activeSession = await createSession(activeProject);
 
   try {

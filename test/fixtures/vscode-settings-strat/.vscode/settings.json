@@ -1,4 +1,5 @@
 {
+  "postgrestools.configFile": "./configs/postgrestools.jsonc",
   "postgrestools.bin": "./bin/postgrestools"
   // "postgrestools.bin": "/bin/postgrestools"
 }

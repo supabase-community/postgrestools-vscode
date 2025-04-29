@@ -47,6 +47,10 @@ const registerUserFacingCommands = () => {
     commands.registerCommand(
       "postgrestools.currentVersion",
       UserFacingCommands.currentVersion
+    ),
+    commands.registerCommand(
+      "postgrestools.copyLatestLogfile",
+      UserFacingCommands.copyLatestLogfile
     )
   );
 

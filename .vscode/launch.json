@@ -73,20 +73,6 @@
       "sourceMapRenames": true
     },
     {
-      "name": "🧩 Debug Extension (Workspace With Settings)",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "--disable-extensions",
-        "--extensionDevelopmentKind=node",
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--log=supabase.postgrestools:debug",
-        "${workspaceFolder}/test/fixtures/workspace-with-settings"
-      ],
-      "outFiles": ["${workspaceFolder}/out/**/*.js"],
-      "sourceMapRenames": true
-    },
-    {
       "name": "🧩 Debug Extension (Yarn PnP Strategy)",
       "type": "extensionHost",
       "request": "launch",
