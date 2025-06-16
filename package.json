@@ -11,7 +11,8 @@
     "url": "https://github.com/supabase-community/postgres-language-server"
   },
   "engines": {
-    "vscode": "^1.96.2"
+    "vscode": "^1.96.2",
+    "node": "^18"
   },
   "icon": "icon.png",
   "categories": [
@@ -123,6 +124,8 @@
   },
   "devDependencies": {
     "@types/node": "20.17.23",
+    "@types/semver": "7.7.0",
+    "@types/semver-compare": "1.0.3",
     "@types/vscode": "^1.96.2",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
@@ -131,6 +134,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "semver": "7.7.2",
     "vscode-languageclient": "9.0.1",
     "vscode-uri": "3.1.0"
   }

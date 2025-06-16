@@ -1,5 +1,6 @@
 import { chmodSync, copyFileSync } from "node:fs";
 import { type LogOutputChannel, Uri, window, workspace } from "vscode";
+import semver from "semver";
 import {
   CloseAction,
   type CloseHandlerResult,
@@ -91,6 +92,15 @@ export const createSession = async (
     await state.context.globalState.update(
       "lastNotifiedOfUpdate",
       new Date().toISOString()
+    );
+  }
+
+  if (
+    CONSTANTS.operatingMode === OperatingMode.MultiRoot &&
+    !semver.gte(version, "0.8.0")
+  ) {
+    window.showInformationMessage(
+      `PostgresTools ${version} does not support multiple databases per workspace. Consider upgrading to >= 0.8.0.`
     );
   }
 
@@ -298,8 +308,8 @@ const createLanguageClient = (bin: Uri, projects: Project[]) => {
   });
 
   const clientOptions: LanguageClientOptions = {
-    outputChannel: createLspLogger(singleRootProject),
-    traceOutputChannel: createLspTraceLogger(singleRootProject),
+    outputChannel: createLspLogger(),
+    traceOutputChannel: createLspTraceLogger(),
     documentSelector: createDocumentSelector(projects),
     progressOnInitialization: true,
 
@@ -355,31 +365,9 @@ const createLanguageClient = (bin: Uri, projects: Project[]) => {
 /**
  * Creates a new PostgresTools LSP logger
  */
-const createLspLogger = (project?: Project): LogOutputChannel => {
-  // If the project is missing, we're creating a logger for the global LSP
-  // session. In this case, we don't have a workspace folder to display in the
-  // logger name, so we just use the display name of the extension.
-  if (!project?.folder) {
-    return window.createOutputChannel(
-      `${CONSTANTS.displayName} LSP (global session) (${CONSTANTS.activationTimestamp})`,
-      {
-        log: true,
-      }
-    );
-  }
-
-  // If the project is present, we're creating a logger for a specific project.
-  // In this case, we display the name of the project and the relative path to
-  // the project root in the logger name. Additionally, when in a multi-root
-  // workspace, we prefix the path with the name of the workspace folder.
-  const prefix =
-    CONSTANTS.operatingMode === OperatingMode.MultiRoot
-      ? `${project.folder.name}::`
-      : "";
-  const path = subtractURI(project.path, project.folder.uri)?.fsPath;
-
+const createLspLogger = (): LogOutputChannel => {
   return window.createOutputChannel(
-    `${CONSTANTS.displayName} LSP (${prefix}${path}) (${CONSTANTS.activationTimestamp})`,
+    `${CONSTANTS.displayName} LSP (project session) (${CONSTANTS.activationTimestamp})`,
     {
       log: true,
     }
@@ -389,31 +377,12 @@ const createLspLogger = (project?: Project): LogOutputChannel => {
 /**
  * Creates a new PostgresTools LSP logger
  */
-const createLspTraceLogger = (project?: Project): LogOutputChannel => {
+const createLspTraceLogger = (): LogOutputChannel => {
   // If the project is missing, we're creating a logger for the global LSP
   // session. In this case, we don't have a workspace folder to display in the
   // logger name, so we just use the display name of the extension.
-  if (!project?.folder) {
-    return window.createOutputChannel(
-      `${CONSTANTS.displayName} LSP trace (global session) (${CONSTANTS.activationTimestamp})`,
-      {
-        log: true,
-      }
-    );
-  }
-
-  // If the project is present, we're creating a logger for a specific project.
-  // In this case, we display the name of the project and the relative path to
-  // the project root in the logger name. Additionally, when in a multi-root
-  // workspace, we prefix the path with the name of the workspace folder.
-  const prefix =
-    CONSTANTS.operatingMode === OperatingMode.MultiRoot
-      ? `${project.folder.name}::`
-      : "";
-  const path = subtractURI(project.path, project.folder.uri)?.fsPath;
-
   return window.createOutputChannel(
-    `${CONSTANTS.displayName} LSP trace (${prefix}${path}) (${CONSTANTS.activationTimestamp})`,
+    `${CONSTANTS.displayName} LSP trace (global session) (${CONSTANTS.activationTimestamp})`,
     {
       log: true,
     }

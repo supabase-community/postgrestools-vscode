@@ -1,0 +1,24 @@
+{
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignore": []
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "db": {
+    "host": "127.0.0.1",
+    "port": 10000,
+    "username": "invalid",
+    "password": "invalid",
+    "database": "invalid",
+    "connTimeoutSecs": 10
+  }
+}

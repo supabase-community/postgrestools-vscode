@@ -1,0 +1,1 @@
+select email from public.users;

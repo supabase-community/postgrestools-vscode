@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": "./config"
+    },
+    {
+      "path": "./project-1"
+    },
+    {
+      "path": "./project-2"
+    }
+  ],
+  "settings": {
+    "postgrestools.bin": "./config/bin/postgrestools",
+    "postgrestools.configFile": "./config/postgrestools.jsonc"
+  }
+}

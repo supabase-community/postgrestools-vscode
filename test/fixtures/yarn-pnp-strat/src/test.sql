@@ -1,1 +1,1 @@
-select email from users;
+select abbrev from users;

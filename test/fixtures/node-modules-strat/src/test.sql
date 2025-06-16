@@ -1,3 +1,1 @@
-select
-  *
-from users;
+select name from public.users;
