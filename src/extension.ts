@@ -89,8 +89,42 @@ const listenForConfigurationChanges = () => {
  */
 const listenForActiveTextEditorChange = () => {
   state.context.subscriptions.push(
-    window.onDidChangeActiveTextEditor((editor) => {
+    window.onDidChangeActiveTextEditor(async () => {
+      const editor = window.activeTextEditor;
+      logger.debug(`User changed active text editor.`);
+
       updateHidden(editor);
+
+      const documentUri = editor?.document.uri;
+      if (!documentUri) {
+        logger.debug(
+          `User changed active text editor, but document uri could not be found.`
+        );
+        return;
+      }
+
+      const folder = workspace.getWorkspaceFolder(documentUri);
+      if (!folder) {
+        logger.debug(
+          `User changed active text editor, but matching workspace folder could not be found.`,
+          { uri: documentUri }
+        );
+        return;
+      }
+
+      const matchingProject = state.allProjects?.get(folder.uri);
+      if (!matchingProject) {
+        logger.debug(
+          `User changed active text editor, but matching project could not be found.`,
+          { uri: folder.uri, projects: state.allProjects }
+        );
+        return;
+      }
+
+      logger.debug(`Found matching active project.`, {
+        project: matchingProject.path,
+      });
+      state.activeProject = matchingProject;
     })
   );
 

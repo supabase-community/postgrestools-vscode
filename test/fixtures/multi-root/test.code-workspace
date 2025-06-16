@@ -9,8 +9,5 @@
     {
       "path": "./project-disabled"
     }
-  ],
-  "settings": {
-    "postgrestools.bin": "./path/to/postgrestools"
-  }
+  ]
 }

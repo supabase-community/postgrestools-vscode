@@ -34,9 +34,6 @@ export const getConfig = <T>(
   return workspace.getConfiguration("postgrestools", options.scope).get<T>(key);
 };
 
-/**
- * TODO: Can the "state.activeProject" also refer to a workspace, or just to a workspace-folder?
- */
 export const isEnabledForFolder = (folder: WorkspaceFolder): boolean => {
   return !!getConfig<boolean>("enabled", { scope: folder.uri });
 };

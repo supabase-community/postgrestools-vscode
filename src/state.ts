@@ -1,4 +1,4 @@
-import { ExtensionContext } from "vscode";
+import { ExtensionContext, Uri } from "vscode";
 import { Releases } from "./releases";
 import { Project } from "./project";
 import { Session } from "./session";
@@ -14,6 +14,7 @@ export type State = {
     | "error";
 
   activeProject?: Project;
+  allProjects?: Map<Uri, Project>;
   activeSession?: Session;
   context: ExtensionContext;
   hidden: boolean;

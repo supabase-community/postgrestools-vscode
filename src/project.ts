@@ -1,6 +1,6 @@
 import { Uri, type WorkspaceFolder, window, workspace } from "vscode";
 import { fileExists } from "./utils";
-import { getConfig } from "./config";
+import { getConfig, isEnabledForFolder } from "./config";
 import { logger } from "./logger";
 
 export type Project = {
@@ -9,18 +9,44 @@ export type Project = {
   configPath?: Uri;
 };
 
-export async function getActiveProject(): Promise<Project | null> {
-  const folders = workspace.workspaceFolders;
+export async function getActiveProjectsForMultiRoot(
+  folders: readonly WorkspaceFolder[]
+): Promise<Project[]> {
+  const globalConfig = getConfig<string>("configFile");
 
-  if (!folders?.length) {
-    logger.warn(`No workspace folders. Single-file Mode?`);
-    return null;
-  }
+  return await Promise.all(
+    folders.map(async (folder) => {
+      if (!isEnabledForFolder(folder)) {
+        return null;
+      }
 
-  return getActiveProjectForSingleFolder(folders[0]);
+      if (!globalConfig) {
+        const defaultConfigPath = Uri.joinPath(
+          folder.uri,
+          "postgrestools.jsonc"
+        );
+
+        const exists = await fileExists(defaultConfigPath);
+        if (!exists) {
+          logger.info(
+            `Project does not have a config file at default path and is therefore excluded from multi-root workspace.`,
+            {
+              path: folder.uri,
+            }
+          );
+          return null;
+        }
+      }
+
+      return {
+        folder,
+        path: folder.uri,
+      };
+    })
+  ).then((results) => results.filter((it) => !!it));
 }
 
-async function getActiveProjectForSingleFolder(
+export async function getActiveProjectForSingleRoot(
   first: WorkspaceFolder
 ): Promise<Project | null> {
   let configPath: Uri;
