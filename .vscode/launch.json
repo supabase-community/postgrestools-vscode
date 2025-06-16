@@ -85,6 +85,20 @@
       ],
       "outFiles": ["${workspaceFolder}/out/**/*.js"],
       "sourceMapRenames": true
+    },
+    {
+      "name": "🧩 Debug Extension (Multi-Root Workspace)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentKind=node",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--log=supabase.postgrestools:debug",
+        "${workspaceFolder}/test/fixtures/multi-root/test.code-workspace"
+      ],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
+      "sourceMapRenames": true
     }
   ]
 }

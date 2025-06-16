@@ -58,9 +58,47 @@ const LOCAL_STRATEGIES: Strategy[] = [
       }),
   },
 ];
+const GLOBAL_STRATEGIES: Strategy[] = [
+  {
+    label: "VSCode Settings",
+    strategy: vsCodeSettingsStrategy,
+    onSuccess: (uri) =>
+      logger.debug(`Found Binary in VSCode Settings (postgrestools.bin)`, {
+        path: uri.fsPath,
+      }),
+  },
+  {
+    label: "PATH Environment Variable",
+    strategy: pathEnvironmentVariableStrategy,
+    onSuccess: (uri) =>
+      logger.debug(`Found Binary in PATH Environment Variable`, {
+        path: uri.fsPath,
+      }),
+  },
+  {
+    label: "Downloaded Binary",
+    strategy: downloadPgltStrategy,
+    onSuccess: (uri) =>
+      logger.debug(`Found downloaded binary`, {
+        path: uri.fsPath,
+      }),
+  },
+];
 
 export class BinaryFinder {
-  static async find(path: Uri) {
+  static async findGlobally() {
+    logger.info("Using Global Strategies to find binary");
+    const binary = await this.attemptFind(GLOBAL_STRATEGIES);
+
+    if (!binary) {
+      logger.debug("Unable to find binary globally.");
+    }
+
+    return binary;
+  }
+
+  static async findLocally(path: Uri) {
+    logger.info("Using Local Strategies to find binary");
     const binary = await this.attemptFind(LOCAL_STRATEGIES, path);
 
     if (!binary) {
@@ -70,7 +108,7 @@ export class BinaryFinder {
     return binary;
   }
 
-  private static async attemptFind(strategies: Strategy[], path: Uri) {
+  private static async attemptFind(strategies: Strategy[], path?: Uri) {
     for (const { strategy, onSuccess, condition, label } of strategies) {
       if (condition && !(await condition(path))) {
         continue;

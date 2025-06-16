@@ -1,4 +1,3 @@
-import { spawnSync } from "node:child_process";
 import { chmodSync, copyFileSync } from "node:fs";
 import { type LogOutputChannel, Uri, window, workspace } from "vscode";
 import {
@@ -25,7 +24,7 @@ import {
   subtractURI,
 } from "./utils";
 import { CONSTANTS, OperatingMode } from "./constants";
-import { getConfig, isEnabledForFolder } from "./config";
+import { getConfig, getFullConfig, isEnabledForFolder } from "./config";
 
 export type Session = {
   bin: Uri;
@@ -39,9 +38,12 @@ export type Session = {
  * Creates a new Pglt LSP session
  */
 export const createSession = async (
-  project: Project
+  project?: Project
 ): Promise<Session | undefined> => {
-  const findResult = await BinaryFinder.find(project.path);
+  const findResult =
+    CONSTANTS.operatingMode === OperatingMode.SingleRoot && project
+      ? await BinaryFinder.findLocally(project?.path)
+      : await BinaryFinder.findGlobally();
 
   if (!findResult) {
     window.showErrorMessage(
@@ -196,8 +198,24 @@ const copyBinaryToTemporaryLocation = async (
 /**
  * Creates a new global session
  */
-export const createActiveSession = async () => {
+export const createActiveSessions = async () => {
   if (state.activeSession) {
+    return;
+  }
+
+  if (CONSTANTS.operatingMode === OperatingMode.SingleFile) {
+    return;
+  }
+
+  logger.info("Workspace Folders", {
+    folders: workspace.workspaceFolders,
+  });
+
+  logger.info("Settings", {
+    config: getFullConfig(),
+  });
+
+  if (CONSTANTS.operatingMode === OperatingMode.MultiRoot) {
     return;
   }
 
@@ -236,8 +254,11 @@ export const createActiveSession = async () => {
 /**
  * Creates a new PostgresTools LSP client
  */
-const createLanguageClient = (bin: Uri, project: Project) => {
-  const args = ["lsp-proxy", `--config-path=${project.configPath.fsPath}`];
+const createLanguageClient = (bin: Uri, project?: Project) => {
+  const args = ["lsp-proxy"];
+  if (project?.configPath) {
+    args.push(`--config-path=${project.configPath.fsPath}`);
+  }
 
   const serverOptions: ServerOptions = {
     command: bin.fsPath,

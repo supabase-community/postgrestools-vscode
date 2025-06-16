@@ -6,7 +6,7 @@ import { logger } from "./logger";
 export type Project = {
   folder?: WorkspaceFolder;
   path: Uri;
-  configPath: Uri;
+  configPath?: Uri;
 };
 
 export async function getActiveProject(): Promise<Project | null> {
@@ -14,13 +14,6 @@ export async function getActiveProject(): Promise<Project | null> {
 
   if (!folders?.length) {
     logger.warn(`No workspace folders. Single-file Mode?`);
-    return null;
-  }
-
-  if (folders.length > 1) {
-    window.showErrorMessage(
-      "PostgresTools does not support Multi-Root workspace mode for now."
-    );
     return null;
   }
 
