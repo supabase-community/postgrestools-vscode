@@ -379,7 +379,7 @@ const createLanguageClient = (bin: Uri, projects: Project[]) => {
  */
 const createLspLogger = (): LogOutputChannel => {
   return window.createOutputChannel(
-    `${CONSTANTS.displayName} LSP (project session) (${CONSTANTS.activationTimestamp})`,
+    `${CONSTANTS.displayName} LSP (${CONSTANTS.activationTimestamp})`,
     {
       log: true,
     }
@@ -394,7 +394,7 @@ const createLspTraceLogger = (): LogOutputChannel => {
   // session. In this case, we don't have a workspace folder to display in the
   // logger name, so we just use the display name of the extension.
   return window.createOutputChannel(
-    `${CONSTANTS.displayName} LSP trace (global session) (${CONSTANTS.activationTimestamp})`,
+    `${CONSTANTS.displayName} LSP trace (${CONSTANTS.activationTimestamp})`,
     {
       log: true,
     }
