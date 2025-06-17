@@ -1,7 +1,7 @@
-import { FileType, Uri, workspace } from "vscode";
+import { FileType, Uri, window, workspace } from "vscode";
 import { logger } from "./logger";
 import { state } from "./state";
-import { CONSTANTS } from "./constants";
+import { CONSTANTS, OperatingMode } from "./constants";
 import { accessSync, constants } from "node:fs";
 import { spawnSync } from "node:child_process";
 

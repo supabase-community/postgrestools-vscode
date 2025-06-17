@@ -15,10 +15,10 @@
   },
   "db": {
     "host": "127.0.0.1",
-    "port": 10000,
-    "username": "invalid",
-    "password": "invalid",
-    "database": "invalid",
+    "port": 54322,
+    "username": "postgres",
+    "password": "postgres",
+    "database": "postgres",
     "connTimeoutSecs": 10
   }
 }

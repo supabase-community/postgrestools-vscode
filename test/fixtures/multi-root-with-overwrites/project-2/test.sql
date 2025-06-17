@@ -1,1 +1,1 @@
-select email from auth.users;
+select email from public.users;

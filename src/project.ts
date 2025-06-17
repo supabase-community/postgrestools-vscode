@@ -1,7 +1,8 @@
-import { Uri, type WorkspaceFolder, window, workspace } from "vscode";
+import { Uri, window, type WorkspaceFolder } from "vscode";
 import { fileExists } from "./utils";
 import { getConfig, isEnabledForFolder } from "./config";
 import { logger } from "./logger";
+import { state } from "./state";
 
 export type Project = {
   folder?: WorkspaceFolder;
@@ -12,7 +13,30 @@ export type Project = {
 export async function getActiveProjectsForMultiRoot(
   folders: readonly WorkspaceFolder[]
 ): Promise<Project[]> {
-  const globalConfig = getConfig<string>("configFile");
+  let globalConfig: Uri | undefined = undefined;
+
+  if (!globalConfig) {
+    const globalConfigSetting = getConfig<string>("configFile");
+
+    if (globalConfigSetting && globalConfigSetting.startsWith(".")) {
+      window.showErrorMessage(
+        "Relative paths to the `postgrestools.jsonc` file in a multi-root workspace are not supported. Please use an absolute path in your `*.code-workspace` file."
+      );
+      return [];
+    }
+
+    if (globalConfigSetting) {
+      globalConfig = Uri.file(globalConfigSetting);
+    }
+  }
+
+  if (globalConfig && !(await fileExists(globalConfig))) {
+    window.showErrorMessage(
+      `Unable to find config file at path:\n${globalConfig.fsPath}`
+    );
+    await state.context.workspaceState.update("workspaceConfigFile", undefined);
+    return [];
+  }
 
   return await Promise.all(
     folders.map(async (folder) => {
@@ -41,6 +65,7 @@ export async function getActiveProjectsForMultiRoot(
       return {
         folder,
         path: folder.uri,
+        configPath: globalConfig,
       };
     })
   ).then((results) => results.filter((it) => !!it));

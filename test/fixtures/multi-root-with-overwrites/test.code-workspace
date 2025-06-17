@@ -11,7 +11,7 @@
     }
   ],
   "settings": {
-    "postgrestools.bin": "./config/bin/postgrestools",
-    "postgrestools.configFile": "./config/postgrestools.jsonc"
+    "postgrestools.bin": "Users/JulianDomke/dev_projects/pglt-vscode/test/fixtures/multi-root-with-overwrites/config/bin/postgrestools",
+    "postgrestools.configFile": "/Users/JulianDomke/dev_projects/pglt-vscode/test/fixtures/multi-root-with-overwrites/config/postgrestools.jsonc"
   }
 }

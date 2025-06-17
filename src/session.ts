@@ -29,7 +29,7 @@ import {
   subtractURI,
 } from "./utils";
 import { CONSTANTS, OperatingMode } from "./constants";
-import { isEnabledForFolder } from "./config";
+import { getConfig, isEnabledForFolder } from "./config";
 
 export type Session = {
   bin: Uri;
@@ -207,9 +207,6 @@ const copyBinaryToTemporaryLocation = async (
   }
 };
 
-/**
- * Creates a new global session
- */
 export const createActiveSession = async () => {
   if (state.activeSession) {
     return;
@@ -231,10 +228,12 @@ export const createActiveSession = async () => {
   }
 
   try {
-    await state.activeSession?.client.start();
-    logger.info("Created a global LSP session");
+    if (state.activeSession) {
+      await state.activeSession?.client.start();
+      logger.info("Created a postgrestools session");
+    }
   } catch (e) {
-    logger.error("Failed to create global LSP session", {
+    logger.error("Failed to create postgrestools session", {
       error: `${e}`,
     });
     state.activeSession?.client.dispose();
@@ -267,6 +266,10 @@ async function createActiveSessionForSingleRoot(): Promise<
 }
 
 async function createActiveSessionForMultiRoot(): Promise<Session | undefined> {
+  if (!getConfig<boolean>("enabled")) {
+    return;
+  }
+
   const folders = workspace.workspaceFolders;
   if (!folders) {
     return undefined;
@@ -291,9 +294,18 @@ const createLanguageClient = (bin: Uri, projects: Project[]) => {
 
   const args = ["lsp-proxy"];
   const options: { cwd?: string } = {};
+
   if (singleRootProject?.configPath) {
     args.push(`--config-path=${singleRootProject.configPath.fsPath}`);
     options.cwd = singleRootProject.path.fsPath;
+  } else if (projects.length > 1 && projects[0].configPath) {
+    /**
+     * In a MultiRoot workspace setting, the projects will only have a
+     * `configPath` property if it was overwritten by a global setting.
+     * In that case, all `configPath`s are the same.
+     */
+    const configFile = projects[0].configPath;
+    args.push(`--config-path=${configFile.fsPath}`);
   }
 
   const serverOptions: ServerOptions = {

@@ -70,32 +70,28 @@ export const vsCodeSettingsStrategy: BinaryFindStrategy = {
       logger.debug("Binary Setting is a string", { binSetting });
 
       let resolvedPath: string;
+
       if (binSetting.startsWith(".")) {
         if (CONSTANTS.operatingMode === OperatingMode.MultiRoot) {
-          const parent = await window.showWorkspaceFolderPick({
-            placeHolder:
-              "You've specified a relative path for the Postgrestools Binary in a MultiRoot Workspace. Please select the parent:",
-          });
-
-          if (!parent) {
-            logger.error(
-              `User picked a nullish Workspace Folder. Likely developer error.`
-            );
-            return null;
-          } else {
-            resolvedPath = Uri.joinPath(parent.uri, binSetting).fsPath;
-          }
+          window.showErrorMessage(
+            "Relative paths for the postgrestools binary in a multi-root workspace setting are not supported. Please use an absolute path in your `*.code-workspace` file."
+          );
+          return null;
         } else if (path) {
           resolvedPath = Uri.joinPath(path, binSetting).fsPath;
         } else {
           // can't really happen.
           logger.error(
-            `User picked a relative path to Postgrestools binary and is not in multi-root workspace mode. Somehow, we couldn't form a path to the binary.`
+            `User picked a relative path for setting and is not in multi-root workspace mode. Somehow, we couldn't form a path to the binary.`
           );
           return null;
         }
       } else {
         resolvedPath = binSetting;
+      }
+
+      if (!resolvedPath) {
+        return null;
       }
 
       logger.debug("Looking for binary at path", { resolvedPath });

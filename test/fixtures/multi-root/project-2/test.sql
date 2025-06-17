@@ -1,1 +1,1 @@
-select email from auth.users;
+select aud from auth.users;
