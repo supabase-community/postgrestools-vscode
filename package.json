@@ -125,7 +125,6 @@
   "devDependencies": {
     "@types/node": "20.17.23",
     "@types/semver": "7.7.0",
-    "@types/semver-compare": "1.0.3",
     "@types/vscode": "^1.96.2",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
