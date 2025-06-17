@@ -1,4 +1,4 @@
-# Simple Project
+# Multi Root with Overwrites
 
 A multi-root workspace that specifies the binary and overwrites the config file globally.
 
