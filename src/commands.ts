@@ -88,7 +88,7 @@ export class UserFacingCommands {
       logdir = Uri.file(process.env.PGT_LOG_PATH);
     } else {
       /*
-       * Looks are placed at different locations based on the platform.
+       * Logs are placed at different locations based on the platform.
        * Linux: /home/alice/.cache/pgt
        * Win: C:\Users\Alice\AppData\Local\supabase-community\pgt\cache
        * Mac: /Users/Alice/Library/Caches/dev.supabase-community.pgt

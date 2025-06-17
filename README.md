@@ -60,6 +60,15 @@ The extension adds seven commands to your VS Code Command Palette. They are all 
 - `PostgresTools: Restart` runs stop and start in succession.
 - `PostgresTools: Copy Latest Server Logfile` copies the latest server log file to your currently opened repo. The log file is meant to be attached to GitHub issues, it can sometimes help us to debug.
 
+## Multi-Root Workspaces
+
+You can use the extension in a multi-root workspace setting, but there are a few caveats:
+
+- You should use at least version 0.8.0 of the binary. You can upgrade it in your `package.json` or run `PostgresTools: Hard Reset (..)`.
+- You can specify a `postgrestools.bin` and a `postgrestools.configFile` in your `.code-workspace` file, but you need to use an absolute path. The binary and the setting will then be used for all your workspace folders.
+- If you don't specify a config file, the binary will look for a `postgrestools.jsonc` file at the every workspace folder's root level. If the file isn't there, the extension will be disabled for the folder. The individual `configFile` settings of the folders are ignored.
+- The binary will currently only change database connections when a new file is opened, not when you alternate focus between two files. So, you might get linting/completions from a different database than you'd expect. For now, you can simply reopen the file, but we'll fix this soon 🙌
+
 ## Troubleshooting
 
 1. First, try restarting the extension via the `PostgresTools: Hard Reset (...)` command mentioned above.

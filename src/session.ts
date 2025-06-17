@@ -1,6 +1,6 @@
-import { spawnSync } from "node:child_process";
 import { chmodSync, copyFileSync } from "node:fs";
 import { type LogOutputChannel, Uri, window, workspace } from "vscode";
+import semver from "semver";
 import {
   CloseAction,
   type CloseHandlerResult,
@@ -15,7 +15,11 @@ import {
 } from "vscode-languageclient/node";
 import { BinaryFinder } from "./binary-finder";
 import { logger } from "./logger";
-import { getActiveProject, type Project } from "./project";
+import {
+  getActiveProjectForSingleRoot,
+  getActiveProjectsForMultiRoot,
+  type Project,
+} from "./project";
 import { state } from "./state";
 import {
   daysToMs,
@@ -31,7 +35,6 @@ export type Session = {
   bin: Uri;
   binaryStrategyLabel: string;
   tempBin?: Uri;
-  project?: Project;
   client: LanguageClient;
 };
 
@@ -39,9 +42,12 @@ export type Session = {
  * Creates a new Pglt LSP session
  */
 export const createSession = async (
-  project: Project
+  projects: Project[]
 ): Promise<Session | undefined> => {
-  const findResult = await BinaryFinder.find(project.path);
+  const findResult =
+    CONSTANTS.operatingMode === OperatingMode.SingleRoot && projects[0]
+      ? await BinaryFinder.findLocally(projects[0].path)
+      : await BinaryFinder.findGlobally();
 
   if (!findResult) {
     window.showErrorMessage(
@@ -89,6 +95,15 @@ export const createSession = async (
     );
   }
 
+  if (
+    CONSTANTS.operatingMode === OperatingMode.MultiRoot &&
+    !semver.gte(version, "0.8.0")
+  ) {
+    window.showInformationMessage(
+      `PostgresTools ${version} does not support multi root workspaces. Consider upgrading to >= 0.8.0.`
+    );
+  }
+
   // Copy the binary to a temporary location, and run it from there
   // so that the original binary can be updated without locking issues.
   // We'll keep track of that temporary location in the session and
@@ -102,9 +117,8 @@ export const createSession = async (
   return {
     bin: findResult.bin,
     tempBin: tempBin,
-    project,
     binaryStrategyLabel: findResult.label,
-    client: createLanguageClient(tempBin ?? findResult.bin, project),
+    client: createLanguageClient(tempBin ?? findResult.bin, projects),
   };
 };
 
@@ -193,39 +207,33 @@ const copyBinaryToTemporaryLocation = async (
   }
 };
 
-/**
- * Creates a new global session
- */
 export const createActiveSession = async () => {
   if (state.activeSession) {
     return;
   }
 
-  const activeProject = await getActiveProject();
-
-  if (!activeProject) {
-    logger.info("No active project found. Aborting.");
+  if (CONSTANTS.operatingMode === OperatingMode.SingleFile) {
+    logger.warn(
+      "Single file mode unsupported, because we need a `postgrestools.jsonc` file."
+    );
     return;
   }
 
-  if (activeProject.folder && !isEnabledForFolder(activeProject.folder)) {
-    logger.info("Extension disabled for project.");
-    return;
+  if (CONSTANTS.operatingMode === OperatingMode.SingleRoot) {
+    state.activeSession = await createActiveSessionForSingleRoot();
   }
 
-  if (!activeProject.folder && !getConfig<boolean>("enabled")) {
-    logger.info("Extension disabled.");
-    return;
+  if (CONSTANTS.operatingMode === OperatingMode.MultiRoot) {
+    state.activeSession = await createActiveSessionForMultiRoot();
   }
-
-  state.activeProject = activeProject;
-  state.activeSession = await createSession(activeProject);
 
   try {
-    await state.activeSession?.client.start();
-    logger.info("Created a global LSP session");
+    if (state.activeSession) {
+      await state.activeSession?.client.start();
+      logger.info("Created a postgrestools session");
+    }
   } catch (e) {
-    logger.error("Failed to create global LSP session", {
+    logger.error("Failed to create postgrestools session", {
       error: `${e}`,
     });
     state.activeSession?.client.dispose();
@@ -233,18 +241,77 @@ export const createActiveSession = async () => {
   }
 };
 
+async function createActiveSessionForSingleRoot(): Promise<
+  Session | undefined
+> {
+  const folder = workspace.workspaceFolders?.[0];
+  if (!folder) {
+    return undefined;
+  }
+
+  const project = await getActiveProjectForSingleRoot(folder);
+  if (!project) {
+    logger.info("No active project found. Aborting.");
+    return;
+  }
+
+  if (project.folder && !isEnabledForFolder(project.folder)) {
+    logger.info("Extension disabled for project.");
+    return;
+  }
+
+  state.activeProject = project;
+  state.allProjects = new Map([[project.path, project]]);
+  return await createSession([project]);
+}
+
+async function createActiveSessionForMultiRoot(): Promise<Session | undefined> {
+  if (!getConfig<boolean>("enabled")) {
+    return;
+  }
+
+  const folders = workspace.workspaceFolders;
+  if (!folders) {
+    return undefined;
+  }
+
+  const projects = await getActiveProjectsForMultiRoot(folders);
+  if (projects.length === 0) {
+    logger.info("No (enabled) project found in multi-rood mode. Aborting.");
+    return;
+  }
+
+  state.activeProject = projects[0];
+  state.allProjects = new Map(projects.map((p) => [p.path, p]));
+  return await createSession(projects);
+}
+
 /**
  * Creates a new PostgresTools LSP client
  */
-const createLanguageClient = (bin: Uri, project: Project) => {
-  const args = ["lsp-proxy", `--config-path=${project.configPath.fsPath}`];
+const createLanguageClient = (bin: Uri, projects: Project[]) => {
+  const singleRootProject = projects.length === 1 ? projects[0] : undefined;
+
+  const args = ["lsp-proxy"];
+  const options: { cwd?: string } = {};
+
+  if (singleRootProject?.configPath) {
+    args.push(`--config-path=${singleRootProject.configPath.fsPath}`);
+    options.cwd = singleRootProject.path.fsPath;
+  } else if (projects.length > 1 && projects[0].configPath) {
+    /**
+     * In a MultiRoot workspace setting, the projects will only have a
+     * `configPath` property if it was overwritten by a global setting.
+     * In that case, all `configPath`s are the same.
+     */
+    const configFile = projects[0].configPath;
+    args.push(`--config-path=${configFile.fsPath}`);
+  }
 
   const serverOptions: ServerOptions = {
     command: bin.fsPath,
     transport: TransportKind.stdio,
-    options: {
-      ...(project?.path && { cwd: project.path.fsPath }),
-    },
+    options,
     args,
   };
 
@@ -253,9 +320,9 @@ const createLanguageClient = (bin: Uri, project: Project) => {
   });
 
   const clientOptions: LanguageClientOptions = {
-    outputChannel: createLspLogger(project),
-    traceOutputChannel: createLspTraceLogger(project),
-    documentSelector: createDocumentSelector(project),
+    outputChannel: createLspLogger(),
+    traceOutputChannel: createLspTraceLogger(),
+    documentSelector: createDocumentSelector(projects),
     progressOnInitialization: true,
 
     initializationFailedHandler: (e): boolean => {
@@ -293,8 +360,8 @@ const createLanguageClient = (bin: Uri, project: Project) => {
       },
     },
     initializationOptions: {
-      rootUri: project?.path,
-      rootPath: project?.path?.fsPath,
+      rootUri: singleRootProject?.path,
+      rootPath: singleRootProject?.path?.fsPath,
     },
     workspaceFolder: undefined,
   };
@@ -310,31 +377,9 @@ const createLanguageClient = (bin: Uri, project: Project) => {
 /**
  * Creates a new PostgresTools LSP logger
  */
-const createLspLogger = (project?: Project): LogOutputChannel => {
-  // If the project is missing, we're creating a logger for the global LSP
-  // session. In this case, we don't have a workspace folder to display in the
-  // logger name, so we just use the display name of the extension.
-  if (!project?.folder) {
-    return window.createOutputChannel(
-      `${CONSTANTS.displayName} LSP (global session) (${CONSTANTS.activationTimestamp})`,
-      {
-        log: true,
-      }
-    );
-  }
-
-  // If the project is present, we're creating a logger for a specific project.
-  // In this case, we display the name of the project and the relative path to
-  // the project root in the logger name. Additionally, when in a multi-root
-  // workspace, we prefix the path with the name of the workspace folder.
-  const prefix =
-    CONSTANTS.operatingMode === OperatingMode.MultiRoot
-      ? `${project.folder.name}::`
-      : "";
-  const path = subtractURI(project.path, project.folder.uri)?.fsPath;
-
+const createLspLogger = (): LogOutputChannel => {
   return window.createOutputChannel(
-    `${CONSTANTS.displayName} LSP (${prefix}${path}) (${CONSTANTS.activationTimestamp})`,
+    `${CONSTANTS.displayName} LSP (${CONSTANTS.activationTimestamp})`,
     {
       log: true,
     }
@@ -344,31 +389,12 @@ const createLspLogger = (project?: Project): LogOutputChannel => {
 /**
  * Creates a new PostgresTools LSP logger
  */
-const createLspTraceLogger = (project?: Project): LogOutputChannel => {
+const createLspTraceLogger = (): LogOutputChannel => {
   // If the project is missing, we're creating a logger for the global LSP
   // session. In this case, we don't have a workspace folder to display in the
   // logger name, so we just use the display name of the extension.
-  if (!project?.folder) {
-    return window.createOutputChannel(
-      `${CONSTANTS.displayName} LSP trace (global session) (${CONSTANTS.activationTimestamp})`,
-      {
-        log: true,
-      }
-    );
-  }
-
-  // If the project is present, we're creating a logger for a specific project.
-  // In this case, we display the name of the project and the relative path to
-  // the project root in the logger name. Additionally, when in a multi-root
-  // workspace, we prefix the path with the name of the workspace folder.
-  const prefix =
-    CONSTANTS.operatingMode === OperatingMode.MultiRoot
-      ? `${project.folder.name}::`
-      : "";
-  const path = subtractURI(project.path, project.folder.uri)?.fsPath;
-
   return window.createOutputChannel(
-    `${CONSTANTS.displayName} LSP trace (${prefix}${path}) (${CONSTANTS.activationTimestamp})`,
+    `${CONSTANTS.displayName} LSP trace (${CONSTANTS.activationTimestamp})`,
     {
       log: true,
     }
@@ -376,29 +402,15 @@ const createLspTraceLogger = (project?: Project): LogOutputChannel => {
 };
 
 /**
- * Creates a new document selector
- *
- * This function will create a document selector scoped to the given project,
- * which will only match files within the project's root directory. If no
- * project is specified, the document selector will match files that have
- * not yet been saved to disk (untitled).
+ * This function will create a document selector scoped to every given project,
+ * which will only match files within the project's root directory.
  */
-const createDocumentSelector = (project?: Project): DocumentFilter[] => {
+const createDocumentSelector = (projects: Project[]): DocumentFilter[] => {
   return ["sql", "postgres"].flatMap((language) => {
-    if (project) {
-      return {
-        language,
-        scheme: "file",
-        pattern: Uri.joinPath(project.path, "**", "*").fsPath.replaceAll(
-          "\\",
-          "/"
-        ),
-      };
-    }
-
-    return ["untitled", "vscode-userdata"].map((scheme) => ({
+    return projects.map((p) => ({
       language,
-      scheme,
+      scheme: "file",
+      pattern: Uri.joinPath(p.path, "**", "*").fsPath.replaceAll("\\", "/"),
     }));
   });
 };

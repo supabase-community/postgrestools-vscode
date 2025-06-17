@@ -147,9 +147,7 @@ async function fromGithub(): Promise<Release[]> {
     const results = (await response.json()) as Release[];
 
     if (results.length === 0) {
-      window.showErrorMessage(
-        'No releases found on GitHub. Suggestion: Set "postgrestools.allowDownloadPrereleases" to `true` in your vscode settings.'
-      );
+      window.showErrorMessage("No releases found on GitHub.");
       return [];
     }
 

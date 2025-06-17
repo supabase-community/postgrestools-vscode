@@ -1,33 +1,77 @@
-import { Uri, type WorkspaceFolder, window, workspace } from "vscode";
+import { Uri, window, type WorkspaceFolder } from "vscode";
 import { fileExists } from "./utils";
-import { getConfig } from "./config";
+import { getConfig, isEnabledForFolder } from "./config";
 import { logger } from "./logger";
+import { state } from "./state";
 
 export type Project = {
   folder?: WorkspaceFolder;
   path: Uri;
-  configPath: Uri;
+  configPath?: Uri;
 };
 
-export async function getActiveProject(): Promise<Project | null> {
-  const folders = workspace.workspaceFolders;
+export async function getActiveProjectsForMultiRoot(
+  folders: readonly WorkspaceFolder[]
+): Promise<Project[]> {
+  let globalConfig: Uri | undefined = undefined;
 
-  if (!folders?.length) {
-    logger.warn(`No workspace folders. Single-file Mode?`);
-    return null;
+  if (!globalConfig) {
+    const globalConfigSetting = getConfig<string>("configFile");
+
+    if (globalConfigSetting && globalConfigSetting.startsWith(".")) {
+      window.showErrorMessage(
+        "Relative paths to the `postgrestools.jsonc` file in a multi-root workspace are not supported. Please use an absolute path in your `*.code-workspace` file."
+      );
+      return [];
+    }
+
+    if (globalConfigSetting) {
+      globalConfig = Uri.file(globalConfigSetting);
+    }
   }
 
-  if (folders.length > 1) {
+  if (globalConfig && !(await fileExists(globalConfig))) {
     window.showErrorMessage(
-      "PostgresTools does not support Multi-Root workspace mode for now."
+      `Unable to find config file at path:\n${globalConfig.fsPath}`
     );
-    return null;
+    await state.context.workspaceState.update("workspaceConfigFile", undefined);
+    return [];
   }
 
-  return getActiveProjectForSingleFolder(folders[0]);
+  return await Promise.all(
+    folders.map(async (folder) => {
+      if (!isEnabledForFolder(folder)) {
+        return null;
+      }
+
+      if (!globalConfig) {
+        const defaultConfigPath = Uri.joinPath(
+          folder.uri,
+          "postgrestools.jsonc"
+        );
+
+        const exists = await fileExists(defaultConfigPath);
+        if (!exists) {
+          logger.info(
+            `Project does not have a config file at default path and is therefore excluded from multi-root workspace.`,
+            {
+              path: folder.uri,
+            }
+          );
+          return null;
+        }
+      }
+
+      return {
+        folder,
+        path: folder.uri,
+        configPath: globalConfig,
+      };
+    })
+  ).then((results) => results.filter((it) => !!it));
 }
 
-async function getActiveProjectForSingleFolder(
+export async function getActiveProjectForSingleRoot(
   first: WorkspaceFolder
 ): Promise<Project | null> {
   let configPath: Uri;

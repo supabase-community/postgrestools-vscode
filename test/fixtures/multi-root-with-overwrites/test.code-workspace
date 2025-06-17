@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": "./config"
+    },
+    {
+      "path": "./project-1"
+    },
+    {
+      "path": "./project-2"
+    }
+  ],
+  "settings": {
+    "postgrestools.bin": "Users/JulianDomke/dev_projects/pglt-vscode/test/fixtures/multi-root-with-overwrites/config/bin/postgrestools",
+    "postgrestools.configFile": "/Users/JulianDomke/dev_projects/pglt-vscode/test/fixtures/multi-root-with-overwrites/config/postgrestools.jsonc"
+  }
+}

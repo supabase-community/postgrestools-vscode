@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "./project-1"
+    },
+    {
+      "path": "./project-2"
+    },
+    {
+      "path": "./project-disabled"
+    },
+    {
+      "path": "./project-no-jsonc"
+    }
+  ]
+}

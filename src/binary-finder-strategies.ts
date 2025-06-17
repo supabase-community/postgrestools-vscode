@@ -1,7 +1,7 @@
 import { Uri, window } from "vscode";
 import { logger } from "./logger";
 import { delimiter, dirname, join } from "node:path";
-import { CONSTANTS } from "./constants";
+import { CONSTANTS, OperatingMode } from "./constants";
 import { fileExists } from "./utils";
 import { createRequire } from "node:module";
 import { getConfig } from "./config";
@@ -9,7 +9,7 @@ import { downloadPglt, getDownloadedBinary } from "./downloader";
 
 export interface BinaryFindStrategy {
   name: string;
-  find(path: Uri): Promise<Uri | null>;
+  find(path?: Uri): Promise<Uri | null>;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface BinaryFindStrategy {
  */
 export const vsCodeSettingsStrategy: BinaryFindStrategy = {
   name: "VSCode Settings Strategy",
-  async find(path: Uri) {
+  async find(path?: Uri) {
     logger.debug("Trying to find PostgresTools binary via VSCode Settings");
 
     type BinSetting = string | Record<string, string> | undefined;
@@ -69,9 +69,30 @@ export const vsCodeSettingsStrategy: BinaryFindStrategy = {
     if (typeof binSetting === "string") {
       logger.debug("Binary Setting is a string", { binSetting });
 
-      const resolvedPath = binSetting.startsWith(".")
-        ? Uri.joinPath(path, binSetting).fsPath
-        : binSetting;
+      let resolvedPath: string;
+
+      if (binSetting.startsWith(".")) {
+        if (CONSTANTS.operatingMode === OperatingMode.MultiRoot) {
+          window.showErrorMessage(
+            "Relative paths for the postgrestools binary in a multi-root workspace setting are not supported. Please use an absolute path in your `*.code-workspace` file."
+          );
+          return null;
+        } else if (path) {
+          resolvedPath = Uri.joinPath(path, binSetting).fsPath;
+        } else {
+          // can't really happen.
+          logger.error(
+            `User picked a relative path for setting and is not in multi-root workspace mode. Somehow, we couldn't form a path to the binary.`
+          );
+          return null;
+        }
+      } else {
+        resolvedPath = binSetting;
+      }
+
+      if (!resolvedPath) {
+        return null;
+      }
 
       logger.debug("Looking for binary at path", { resolvedPath });
 
@@ -98,7 +119,7 @@ export const vsCodeSettingsStrategy: BinaryFindStrategy = {
  */
 export const nodeModulesStrategy: BinaryFindStrategy = {
   name: "Node Modules Strategy",
-  async find(path: Uri) {
+  async find(path?: Uri) {
     logger.debug("Trying to find PostgresTools binary in Node Modules");
 
     if (!path) {
@@ -178,7 +199,7 @@ export const nodeModulesStrategy: BinaryFindStrategy = {
 
 export const yarnPnpStrategy: BinaryFindStrategy = {
   name: "Yarn PnP Strategy",
-  async find(path: Uri) {
+  async find(path?: Uri) {
     logger.debug("Trying to find PostgresTools binary in Yarn Plug'n'Play");
 
     if (!path) {

@@ -1,1 +1,1 @@
-select e from users;
+select email from users;

@@ -1,0 +1,1 @@
+select aud from auth.users;
