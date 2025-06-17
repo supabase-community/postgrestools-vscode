@@ -9,5 +9,6 @@ The extension should not ask for any binaries and work out of the box (the binar
 ## Test protocol
 
 0. Follow the instructions in `GLOBAL_SETUP.md`.
-1. Run another postgres database on :54322 (`supabase start` in any project will launch a db that listens on that port).
-2. The extension should work as expected in all `test.sql` files.
+1. Adjust the paths in `test.code-workspace` such that they match your system.
+2. Run another postgres database on :54322 (`supabase start` in any project will launch a db that listens on that port).
+3. The extension should work as expected in all `test.sql` files.
