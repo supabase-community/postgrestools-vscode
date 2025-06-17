@@ -100,7 +100,7 @@ export const createSession = async (
     !semver.gte(version, "0.8.0")
   ) {
     window.showInformationMessage(
-      `PostgresTools ${version} does not support multiple databases per workspace. Consider upgrading to >= 0.8.0.`
+      `PostgresTools ${version} does not support multi root workspaces. Consider upgrading to >= 0.8.0.`
     );
   }
 
