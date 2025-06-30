@@ -44,6 +44,7 @@ jobs:
           tag_name: "v${{ steps.get_version.outputs.version }}"
           name: "v${{ steps.get_version.outputs.version }}"
           draft: true
+          body: "Postgrestools Extension version v${{ steps.get_version.outputs.version }} has been released! 🚀"
           files: "${{ steps.find_vsix.outputs.vsix_file }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
