@@ -121,7 +121,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "package": "vsce package",
-    "publish": "vsce package && vsce publish"
+    "publish": "vsce package -o extension.vsix && vsce publish --packagePath extension.vsix && ovsx publish --packagePath extension.vsix"
   },
   "devDependencies": {
     "@types/node": "20.17.23",
@@ -131,6 +131,7 @@
     "@typescript-eslint/parser": "^8.22.0",
     "@vscode/vsce": "3.5.0",
     "eslint": "^9.19.0",
+    "ovsx": "0.10.5",
     "typescript": "^5.7.3"
   },
   "dependencies": {
